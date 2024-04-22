@@ -41,7 +41,7 @@
                     <br><br>How would you describe the tone of voice you want the chatbot to use? For example, 
                     formal, friendly, technical, etc.
                     <br><br>Are there any specific phrases or greetings you would like the chatbot to use when 
-                    initiating conversations?
+                    starting conversations?
                   </label>
                   <input type="text" class="form-control" id="botInfo" required>
                   <button type="button" class="btn btn-primary next-btn">Next</button>
@@ -88,6 +88,18 @@
         <button type="button" class="btn btn-primary next-btn">Next</button>
     </div>
 </div>
+              <!-- Question 5 -->
+              <div class="question" id="question5" style="display: none;">
+                <div class="form-group">
+                  <label for="botLang"><strong>Language and Localization</strong>
+                    <br><br>What languages do you need the chatbot to support?
+                    <br><br>Are there any regional or cultural considerations 
+                    the chatbot needs to be aware of when interacting with users?
+                  </label>
+                  <input type="text" class="form-control" id="botLang" required>
+                  <button type="button" class="btn btn-primary next-btn">Next</button>
+                </div>
+              </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -155,7 +167,8 @@
                 var allData = {
                     companyContext: $('#companyContext').val(),
                     botInfo: $('#botInfo').val(),
-                    botGoals: $('#botGoals').val()
+                    botGoals: $('#botGoals').val(),
+                    botLang: $('#botLang').val()
                 };
 
 
@@ -165,7 +178,7 @@
                     type: 'POST',
                     url: '/setContext',
                     contentType: 'application/json',
-                    data: JSON.stringify({ companyContext: companyContext, botInfo: botInfo, botGoals: botGoals }),
+                    data: JSON.stringify({ companyContext: companyContext, botInfo: botInfo, botGoals: botGoals, botLang: botLang }),
                     success: function() {
                         console.log('Context updated successfully.');
                     },

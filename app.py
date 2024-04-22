@@ -77,6 +77,7 @@ def set_context():
     company_context = data.get('companyContext')
     bot_info = data.get('botInfo')
     botGoals = data.get('botGoals')
+    botLang = data.get('botLang')
     global global_context
     global_context = f"""
     This is a customer service bot designed to assist with inquiries about products and services offered by a company. Here is some company context: {company_context}. 
