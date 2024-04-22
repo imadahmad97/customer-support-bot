@@ -61,20 +61,33 @@
                 </div>
               </div>
               <!-- Question 4 -->
-              <div class="question" id="question4" style="display: none;">
-                <div class="form-group">
-                  <label for="ops"><strong>Issue List</strong>
-                    <br><br>Please provide a list of common issues and how they should be dealt with.
-                    For example, under solution you may put "Let customer know that username can be changed
-                    in the user profile section in the app settings", or "Escalate issue to support team". You 
-                    can always add to this list later.
-
-                    
-                  </label>
-                  <input type="text" class="form-control" id="botGoals" required>
-                  <button type="button" class="btn btn-primary next-btn">Next</button>
-                </div>
-              </div>
+<div class="question" id="question4" style="display: none;">
+    <div class="form-group">
+        <label for="ops">
+            <strong>Issue List</strong>
+            <br><br>Please provide a list of common issues and how they should be dealt with.
+            For example, under the solution column, you may put "Let customer know that username can be changed
+            in the user profile section in the app settings", or "Escalate issue to support team". You 
+            can always add to this list later.
+        </label>
+        <table class="table table-bordered" id="issuesTable">
+            <thead>
+                <tr>
+                    <th>Problem</th>
+                    <th>Solution</th>
+                </tr>
+            </thead>
+            <tbody contenteditable="true">
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-primary" id="addRow">Add an issue</button>
+        <button type="button" class="btn btn-primary next-btn">Next</button>
+    </div>
+</div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -119,6 +132,11 @@
     <script>
         $(document).ready(function() {
             $('#initialQuestionsModal').modal('show');
+
+            $('#addRow').click(function() {
+        var newRow = '<tr contenteditable="true"><td></td><td></td></tr>';
+        $('#issuesTable tbody').append(newRow);
+             });
 
             $('.next-btn').click(function() {
                 var currentQuestion = $(this).closest('.question');
