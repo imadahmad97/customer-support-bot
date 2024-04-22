@@ -164,10 +164,20 @@
             });
 
             $('#submitQuestions').click(function() {
+                var issuesList = [];
+                $('#issuesTable tbody tr').each(function() {
+                    var problem = $(this).find('td').eq(0).text().trim();
+                    var solution = $(this).find('td').eq(1).text().trim();
+
+                    if(problem && solution) {
+                        issuesList.push({ problem: problem, solution: solution });
+                    }
+                });
                 var allData = {
                     companyContext: $('#companyContext').val(),
                     botInfo: $('#botInfo').val(),
                     botGoals: $('#botGoals').val(),
+                    issues: issuesList,
                     botLang: $('#botLang').val()
                 };
 
