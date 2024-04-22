@@ -13,7 +13,7 @@ body,html{
 .card{
 	height: 500px;
 	border-radius: 15px !important;
-	background-color: rgba(0,0,0,0.4) !important;
+	background-color: #0F2143 !important;
 }
 .contacts_body{
 	padding:  0.75rem 0 !important;
