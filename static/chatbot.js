@@ -2,7 +2,7 @@ $(document).ready(function () {
     $("#initialQuestionsModal").modal("show");
 
     $("#addRow").click(function () {
-      var newRow = '<tr contenteditable="true"><td></td><td></td></tr>';
+      var newRow = '<tr contenteditable="true"><td><textarea class="form-control"></textarea></td><td><textarea class="form-control"></textarea></td></tr>';
       $("#issuesTable tbody").append(newRow);
     });
 
