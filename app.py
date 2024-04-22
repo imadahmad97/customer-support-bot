@@ -74,13 +74,13 @@ def set_context():
         json: JSON object confirming the context update or an error message.
     """
     data = request.get_json()
-    company_name = data.get('companyName')
-    bot_introduction = data.get('botIntroduction')
+    company_context = data.get('companyContext')
+    bot_info = data.get('botInfo')
     global global_context
     global_context = f"""
-    This is a customer service bot designed to assist with inquiries about products and services offered by {company_name}. It introduces itself as {bot_introduction}.
+    This is a customer service bot designed to assist with inquiries about products and services offered by a company. Here is some company context: {company_context}. 
+    Here's some info about how you should act: {bot_info}.
     """
-    print("Updated global context:", global_context)
     return jsonify({'message': 'Context updated successfully'})
 
 if __name__ == '__main__':

@@ -21,17 +21,26 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="initialQuestionsForm">
-              <div class="form-group">
-                <label for="companyName">What is your company name?</label>
-                <input type="text" class="form-control" id="companyName" required>
+             <!-- Question 1 -->
+             <div class="question" id="question1">
+                <div class="form-group">
+                  <label for="companyContext">Can you describe your company in a few sentences?</label>
+                  <textarea class="form-control" id="companyContext" required></textarea>
+                  <button type="button" class="btn btn-primary next-btn">Next</button>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="botIntroduction">How should I introduce myself?</label>
-                <input type="text" class="form-control" id="botIntroduction" required>
+              <!-- Question 2 -->
+              <div class="question" id="question2" style="display: none;">
+                <div class="form-group">
+                  <label for="botInfo">What name would you like your chatbot to have?</label>
+                  <input type="text" class="form-control" id="botInfo" required>
+                  <button type="button" class="btn btn-primary next-btn">Next</button>
+                </div>
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="submitQuestions" style="display: none;">Submit</button>
           </div>
         </div>
       </div>
@@ -72,24 +81,26 @@
 
     <script>
         $(document).ready(function() {
-            // Show the modal on page load
             $('#initialQuestionsModal').modal('show');
 
-            // Handle form submission for initial questions
-            $('#initialQuestionsForm').on('submit', function(event) {
-                event.preventDefault();
-                var companyName = $('#companyName').val();
-                var botIntro = $('#botIntroduction').val();
+            $('.next-btn').click(function() {
+                var currentQuestion = $(this).closest('.question');
+                var nextQuestion = currentQuestion.next('.question');
 
-                // Hide the modal after submission
-                $('#initialQuestionsModal').modal('hide');
+                currentQuestion.hide();
 
-                // Send the data to the server to update context
+                if(nextQuestion.length) {
+                    nextQuestion.show();
+                } else {
+                    $('#submitQuestions').show();
+                }
+            });
+
                 $.ajax({
                     type: 'POST',
                     url: '/setContext',
                     contentType: 'application/json',
-                    data: JSON.stringify({ companyName: companyName, botIntroduction: botIntro }),
+                    data: JSON.stringify({ companyContext: companyContext, botInfo: botInfo }),
                     success: function() {
                         console.log('Context updated successfully.');
                     },
@@ -99,7 +110,6 @@
                 });
             });
 
-            // Chat message submission
             $("#messageArea").on("submit", function(event) {
                 event.preventDefault();
                 const date = new Date();
@@ -123,7 +133,6 @@
                     $("#messageFormeight").append($.parseHTML(botHtml));
                 });
             });
-        });
     </script>
 </body>
 </html>
