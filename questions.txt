@@ -1,0 +1,21 @@
+1.	Company and Product Context
+"Can you describe your company in a few sentences?"
+"What products or services does your company offer?"
+"Who are your main customers or target audience?"
+2.	Chatbot Identity and Tone
+"What name would you like your chatbot to have?"
+"How would you describe the tone of voice you want the chatbot to use? For example, formal, friendly, technical, etc."
+"Are there any specific phrases or greetings you would like the chatbot to use when initiating conversations?"
+3.	Purpose and Goals
+"What are the main tasks you want the chatbot to handle? For example, answering FAQs, booking appointments, providing support, etc."
+"What are the key goals you want to achieve with this chatbot? For example, reducing support ticket volume, improving customer satisfaction, etc."
+4.	Operational Details
+"During what hours will the chatbot be available to interact with customers? Are there off-hours where you prefer a different type of response?"
+"Where should the chatbot escalate issues it cannot resolve?"
+5.	Language and Localization
+"What languages do you need the chatbot to support?"
+"Are there any regional or cultural considerations the chatbot needs to be aware of when interacting with users?"
+6.	Personalization and Data Handling
+"What personal information might the chatbot need to collect from users to provide effective service?"
+"How should the chatbot handle sensitive data or privacy concerns?"
+
