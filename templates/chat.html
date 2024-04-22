@@ -96,6 +96,15 @@
                 }
             });
 
+            $('#submitQuestions').click(function() {
+                var allData = {
+                    companyContext: $('#companyContext').val(),
+                    botInfo: $('#botInfo').val()
+                };
+
+
+                $('#initialQuestionsModal').modal('hide');
+});
                 $.ajax({
                     type: 'POST',
                     url: '/setContext',
