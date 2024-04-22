@@ -76,10 +76,11 @@ def set_context():
     data = request.get_json()
     company_context = data.get('companyContext')
     bot_info = data.get('botInfo')
+    botGoals = data.get('botGoals')
     global global_context
     global_context = f"""
     This is a customer service bot designed to assist with inquiries about products and services offered by a company. Here is some company context: {company_context}. 
-    Here's some info about how you should act: {bot_info}.
+    Here's some info about how you should act: {bot_info}. And here are is a summary for your purpose and goals: {botGoals}.
     """
     return jsonify({'message': 'Context updated successfully'})
 

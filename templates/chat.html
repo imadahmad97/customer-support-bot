@@ -24,7 +24,11 @@
              <!-- Question 1 -->
              <div class="question" id="question1">
                 <div class="form-group">
-                  <label for="companyContext">Can you describe your company in a few sentences?</label>
+                  <label for="companyContext"><strong>Company and Product Context</strong>
+                    <br><br>Can you describe your company in a few sentences?
+                    <br><br>What products or services does your company offer?
+                    <br><br>Who are your main customers or target audience?
+                  </label>
                   <textarea class="form-control" id="companyContext" required></textarea>
                   <button type="button" class="btn btn-primary next-btn">Next</button>
                 </div>
@@ -32,8 +36,42 @@
               <!-- Question 2 -->
               <div class="question" id="question2" style="display: none;">
                 <div class="form-group">
-                  <label for="botInfo">What name would you like your chatbot to have?</label>
+                  <label for="botInfo"><strong>Chatbot Identity and Tone</strong>
+                    <br><br>What name would you like your chatbot to have?
+                    <br><br>How would you describe the tone of voice you want the chatbot to use? For example, 
+                    formal, friendly, technical, etc.
+                    <br><br>Are there any specific phrases or greetings you would like the chatbot to use when 
+                    initiating conversations?
+                  </label>
                   <input type="text" class="form-control" id="botInfo" required>
+                  <button type="button" class="btn btn-primary next-btn">Next</button>
+                </div>
+              </div>
+              <!-- Question 3 -->
+              <div class="question" id="question3" style="display: none;">
+                <div class="form-group">
+                  <label for="botGoals"><strong>Purpose and Goals</strong>
+                    <br><br>What are the main tasks you want the chatbot to handle? For example, 
+                    answering FAQs, booking appointments, providing support, etc.
+                    <br><br>What are the key goals you want to achieve with this chatbot? 
+                    For example, reducing support ticket volume, improving customer satisfaction, etc.
+                  </label>
+                  <input type="text" class="form-control" id="botGoals" required>
+                  <button type="button" class="btn btn-primary next-btn">Next</button>
+                </div>
+              </div>
+              <!-- Question 4 -->
+              <div class="question" id="question4" style="display: none;">
+                <div class="form-group">
+                  <label for="ops"><strong>Issue List</strong>
+                    <br><br>Please provide a list of common issues and how they should be dealt with.
+                    For example, under solution you may put "Let customer know that username can be changed
+                    in the user profile section in the app settings", or "Escalate issue to support team". You 
+                    can always add to this list later.
+
+                    
+                  </label>
+                  <input type="text" class="form-control" id="botGoals" required>
                   <button type="button" class="btn btn-primary next-btn">Next</button>
                 </div>
               </div>
@@ -64,7 +102,6 @@
                         </div>
                     </div>
                     <div id="messageFormeight" class="card-body msg_card_body">
-                        <!-- Messages will be shown here -->
                     </div>
                     <div class="card-footer">
                         <form id="messageArea" class="input-group">
@@ -99,7 +136,8 @@
             $('#submitQuestions').click(function() {
                 var allData = {
                     companyContext: $('#companyContext').val(),
-                    botInfo: $('#botInfo').val()
+                    botInfo: $('#botInfo').val(),
+                    botGoals: $('#botGoals').val()
                 };
 
 
@@ -109,7 +147,7 @@
                     type: 'POST',
                     url: '/setContext',
                     contentType: 'application/json',
-                    data: JSON.stringify({ companyContext: companyContext, botInfo: botInfo }),
+                    data: JSON.stringify({ companyContext: companyContext, botInfo: botInfo, botGoals: botGoals }),
                     success: function() {
                         console.log('Context updated successfully.');
                     },
