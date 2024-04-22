@@ -49,30 +49,34 @@
 		
 		<script>
 			$(document).ready(function() {
-				$("#messageArea").on("submit", function(event) {
-					const date = new Date();
-					const hour = date.getHours();
-					const minute = date.getMinutes();
-					const str_time = hour+":"+minute;
-					var rawText = $("#text").val();
+    $("#messageArea").on("submit", function(event) {
+        event.preventDefault();  // This should be at the beginning to ensure no default form submit behavior interferes
+        const date = new Date();
+        const hour = date.getHours();
+        const minute = date.getMinutes();
+        const str_time = hour + ":" + minute;
+        var rawText = $("#text").val();
 
-					var userHtml = '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' + rawText + '<span class="msg_time_send">'+ str_time + '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="rounded-circle user_img_msg"></div></div>';
-					
-					$("#text").val("");
-					$("#messageFormeight").append(userHtml);
+        var userHtml = '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' + rawText + '<span class="msg_time_send">' + str_time + '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="rounded-circle user_img_msg"></div></div>';
+        $("#text").val("");
+        $("#messageFormeight").append(userHtml);
 
-					$.ajax({
-            			data: JSON.stringify({msg: rawText}),  // Ensure the data is sent as JSON
-            			contentType: 'application/json',       // Set the appropriate content type for JSON
-           			 	type: "POST",
-           				url: "/get",
-					}).done(function(data) {
-						var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + data + '<span class="msg_time">' + str_time + '</span></div></div>';
-						$("#messageFormeight").append($.parseHTML(botHtml));
-					});
-					event.preventDefault();
-				});
-			});
+        $.ajax({
+            data: JSON.stringify({msg: rawText}),
+            contentType: 'application/json',
+            type: "POST",
+            url: "/get",
+        }).done(function(data) {
+            var botText = data.response; // Correctly extract the 'response' field from the JSON object
+            var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + botText + '<span class="msg_time">' + str_time + '</span></div></div>';
+            $("#messageFormeight").append($.parseHTML(botHtml));
+        }).fail(function(error) {
+            console.error("Error: " + JSON.stringify(error));
+            alert("Error communicating with the chatbot");
+        });
+    });
+});
+
 		</script>
         
     </body>

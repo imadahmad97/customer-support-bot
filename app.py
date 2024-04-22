@@ -8,7 +8,6 @@ GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 app = Flask(__name__)
 
 def configure_model():
-    print("Configuring model with API Key:", GOOGLE_API_KEY)
     genai.configure(api_key=GOOGLE_API_KEY)
     model = genai.GenerativeModel('gemini-pro')
     return model
@@ -33,9 +32,13 @@ def chat():
 
 def get_Chat_response(text):
     prompt = global_context + "\nCustomer: " + text + "\nBot:"
-    response_object = model.generate_content(prompt)
-    response_text = response_object.result['candidates'][0]['content']['parts'][0]['text']
-    return jsonify({'response': response_text})
+    try:
+        response = model.generate_content(prompt)
+        response_text = response._result.candidates[0].content.parts[0].text  # Update according to actual structure
+        return jsonify({'response': response_text})
+    except Exception as e:
+        print("Failed to generate or parse response:", str(e))
+        return jsonify({'error': 'Failed to generate response'}), 500
 
 
 if __name__ == '__main__':
