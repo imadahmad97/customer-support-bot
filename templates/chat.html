@@ -1,109 +1,175 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Chatbot</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
     <!-- Modal for Initial Questions -->
     <div class="modal" tabindex="-1" role="dialog" id="initialQuestionsModal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Welcome! Let's Customize Your Experience</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <h5 class="modal-title">
+              Welcome! Let's Customize Your Experience
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-             <!-- Question 1 -->
-             <div class="question" id="question1">
-                <div class="form-group">
-                  <label for="companyContext"><strong>Company and Product Context</strong>
-                    <br><br>Can you describe your company in a few sentences?
-                    <br><br>What products or services does your company offer?
-                    <br><br>Who are your main customers or target audience?
-                  </label>
-                  <textarea class="form-control" id="companyContext" required></textarea>
-                  <button type="button" class="btn btn-primary next-btn">Next</button>
-                </div>
+            <!-- Question 1 -->
+            <div class="question" id="question1">
+              <div class="form-group">
+                <label for="companyContext"
+                  ><strong>Company and Product Context</strong> <br /><br />Can
+                  you describe your company in a few sentences? <br /><br />What
+                  products or services does your company offer? <br /><br />Who
+                  are your main customers or target audience?
+                </label>
+                <textarea
+                  class="form-control"
+                  id="companyContext"
+                  required
+                ></textarea>
+                <button type="button" class="btn btn-primary next-btn">
+                  Next
+                </button>
               </div>
-              <!-- Question 2 -->
-              <div class="question" id="question2" style="display: none;">
-                <div class="form-group">
-                  <label for="botInfo"><strong>Chatbot Identity and Tone</strong>
-                    <br><br>What name would you like your chatbot to have?
-                    <br><br>How would you describe the tone of voice you want the chatbot to use? For example, 
-                    formal, friendly, technical, etc.
-                    <br><br>Are there any specific phrases or greetings you would like the chatbot to use when 
-                    starting conversations?
-                  </label>
-                  <input type="text" class="form-control" id="botInfo" required>
-                  <button type="button" class="btn btn-primary next-btn">Next</button>
-                </div>
+            </div>
+            <!-- Question 2 -->
+            <div class="question" id="question2" style="display: none">
+              <div class="form-group">
+                <label for="botInfo"
+                  ><strong>Chatbot Identity and Tone</strong> <br /><br />What
+                  name would you like your chatbot to have? <br /><br />How
+                  would you describe the tone of voice you want the chatbot to
+                  use? For example, formal, friendly, technical, etc.
+                  <br /><br />Are there any specific phrases or greetings you
+                  would like the chatbot to use when starting conversations?
+                </label>
+                <input type="text" class="form-control" id="botInfo" required />
+                <button type="button" class="btn btn-primary next-btn">
+                  Next
+                </button>
               </div>
-              <!-- Question 3 -->
-              <div class="question" id="question3" style="display: none;">
-                <div class="form-group">
-                  <label for="botGoals"><strong>Purpose and Goals</strong>
-                    <br><br>What are the main tasks you want the chatbot to handle? For example, 
-                    answering FAQs, booking appointments, providing support, etc.
-                    <br><br>What are the key goals you want to achieve with this chatbot? 
-                    For example, reducing support ticket volume, improving customer satisfaction, etc.
-                  </label>
-                  <input type="text" class="form-control" id="botGoals" required>
-                  <button type="button" class="btn btn-primary next-btn">Next</button>
-                </div>
+            </div>
+            <!-- Question 3 -->
+            <div class="question" id="question3" style="display: none">
+              <div class="form-group">
+                <label for="botGoals"
+                  ><strong>Purpose and Goals</strong> <br /><br />What are the
+                  main tasks you want the chatbot to handle? For example,
+                  answering FAQs, booking appointments, providing support, etc.
+                  <br /><br />What are the key goals you want to achieve with
+                  this chatbot? For example, reducing support ticket volume,
+                  improving customer satisfaction, etc.
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="botGoals"
+                  required
+                />
+                <button type="button" class="btn btn-primary next-btn">
+                  Next
+                </button>
               </div>
-              <!-- Question 4 -->
-<div class="question" id="question4" style="display: none;">
-    <div class="form-group">
-        <label for="ops">
-            <strong>Issue List</strong>
-            <br><br>Please provide a list of common issues and how they should be dealt with.
-            For example, under the solution column, you may put "Let customer know that username can be changed
-            in the user profile section in the app settings", or "Escalate issue to support team". You 
-            can always add to this list later.
-        </label>
-        <table class="table table-bordered" id="issuesTable">
-            <thead>
-                <tr>
-                    <th>Problem</th>
-                    <th>Solution</th>
-                </tr>
-            </thead>
-            <tbody contenteditable="true">
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        <button type="button" class="btn btn-primary" id="addRow">Add an issue</button>
-        <button type="button" class="btn btn-primary next-btn">Next</button>
-    </div>
-</div>
-              <!-- Question 5 -->
-              <div class="question" id="question5" style="display: none;">
-                <div class="form-group">
-                  <label for="botLang"><strong>Language and Localization</strong>
-                    <br><br>What languages do you need the chatbot to support?
-                    <br><br>Are there any regional or cultural considerations 
-                    the chatbot needs to be aware of when interacting with users?
-                  </label>
-                  <input type="text" class="form-control" id="botLang" required>
-                  <button type="button" class="btn btn-primary next-btn">Next</button>
-                </div>
+            </div>
+            <!-- Question 4 -->
+            <div class="question" id="question4" style="display: none">
+              <div class="form-group">
+                <label for="ops">
+                  <strong>Issue List</strong>
+                  <br /><br />Please provide a list of common issues and how
+                  they should be dealt with. For example, under the solution
+                  column, you may put "Let customer know that username can be
+                  changed in the user profile section in the app settings", or
+                  "Escalate issue to support team". You can always add to this
+                  list later.
+                </label>
+                <table class="table table-bordered" id="issuesTable">
+                  <thead>
+                    <tr>
+                      <th>Problem</th>
+                      <th>Solution</th>
+                    </tr>
+                  </thead>
+                  <tbody contenteditable="true">
+                    <tr>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button type="button" class="btn btn-primary" id="addRow">
+                  Add an issue
+                </button>
+                <button type="button" class="btn btn-primary next-btn">
+                  Next
+                </button>
               </div>
+            </div>
+            <!-- Question 5 -->
+            <div class="question" id="question5" style="display: none">
+              <div class="form-group">
+                <label for="botLang"
+                  ><strong>Language and Localization</strong> <br /><br />What
+                  languages do you need the chatbot to support? <br /><br />Are
+                  there any regional or cultural considerations the chatbot
+                  needs to be aware of when interacting with users?
+                </label>
+                <input type="text" class="form-control" id="botLang" required />
+                <button type="button" class="btn btn-primary next-btn">
+                  Next
+                </button>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="submitQuestions" style="display: none;">Submit</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="submitQuestions"
+              style="display: none"
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>
@@ -111,116 +177,51 @@
 
     <!-- Chat interface -->
     <div class="container-fluid h-100">
-        <div class="row justify-content-center h-100">
-            <div class="col-md-8 col-xl-6 chat">
-                <div class="card">
-                    <div class="card-header msg_head">
-                        <div class="d-flex bd-highlight">
-                            <div class="img_cont">
-                                <img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png" class="rounded-circle user_img">
-                                <span class="online_icon"></span>
-                            </div>
-                            <div class="user_info">
-                                <span>ChatBot</span>
-                                <p>Ask me anything!</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="messageFormeight" class="card-body msg_card_body">
-                    </div>
-                    <div class="card-footer">
-                        <form id="messageArea" class="input-group">
-                            <input type="text" id="text" name="msg" placeholder="Type your message..." autocomplete="off" class="form-control type_msg" required/>
-                            <div class="input-group-append">
-                                <button type="submit" id="send" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></button>
-                            </div>
-                        </form>
-                    </div>
+      <div class="row justify-content-center h-100">
+        <div class="col-md-8 col-xl-6 chat">
+          <div class="card">
+            <div class="card-header msg_head">
+              <div class="d-flex bd-highlight">
+                <div class="img_cont">
+                  <img
+                    src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png"
+                    class="rounded-circle user_img"
+                  />
+                  <span class="online_icon"></span>
                 </div>
+                <div class="user_info">
+                  <span>ChatBot</span>
+                  <p>Ask me anything!</p>
+                </div>
+              </div>
             </div>
+            <div id="messageFormeight" class="card-body msg_card_body"></div>
+            <div class="card-footer">
+              <form id="messageArea" class="input-group">
+                <input
+                  type="text"
+                  id="text"
+                  name="msg"
+                  placeholder="Type your message..."
+                  autocomplete="off"
+                  class="form-control type_msg"
+                  required
+                />
+                <div class="input-group-append">
+                  <button
+                    type="submit"
+                    id="send"
+                    class="input-group-text send_btn"
+                  >
+                    <i class="fas fa-location-arrow"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#initialQuestionsModal').modal('show');
-
-            $('#addRow').click(function() {
-        var newRow = '<tr contenteditable="true"><td></td><td></td></tr>';
-        $('#issuesTable tbody').append(newRow);
-             });
-
-            $('.next-btn').click(function() {
-                var currentQuestion = $(this).closest('.question');
-                var nextQuestion = currentQuestion.next('.question');
-
-                currentQuestion.hide();
-
-                if(nextQuestion.length) {
-                    nextQuestion.show();
-                } else {
-                    $('#submitQuestions').show();
-                }
-            });
-
-            $('#submitQuestions').click(function() {
-                var issuesList = [];
-                $('#issuesTable tbody tr').each(function() {
-                    var problem = $(this).find('td').eq(0).text().trim();
-                    var solution = $(this).find('td').eq(1).text().trim();
-
-                    if(problem && solution) {
-                        issuesList.push({ problem: problem, solution: solution });
-                    }
-                });
-                var allData = {
-                    companyContext: $('#companyContext').val(),
-                    botInfo: $('#botInfo').val(),
-                    botGoals: $('#botGoals').val(),
-                    issues: issuesList,
-                    botLang: $('#botLang').val()
-                };
-
-
-                $('#initialQuestionsModal').modal('hide');
-});
-                $.ajax({
-                    type: 'POST',
-                    url: '/setContext',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ companyContext: companyContext, botInfo: botInfo, botGoals: botGoals, botLang: botLang }),
-                    success: function() {
-                        console.log('Context updated successfully.');
-                    },
-                    error: function() {
-                        console.error('Failed to update context.');
-                    }
-                });
-            });
-
-            $("#messageArea").on("submit", function(event) {
-                event.preventDefault();
-                const date = new Date();
-                const hour = date.getHours();
-                const minute = date.getMinutes();
-                const str_time = hour + ":" + minute;
-                var rawText = $("#text").val();
-
-                var userHtml = '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' + rawText + '<span class="msg_time_send">' + str_time + '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="rounded-circle user_img_msg"></div></div>';
-                $("#text").val("");
-                $("#messageFormeight").append(userHtml);
-
-                $.ajax({
-                    data: JSON.stringify({msg: rawText}),
-                    contentType: 'application/json',
-                    type: "POST",
-                    url: "/get",
-                }).done(function(data) {
-                    var botText = data.response;
-                    var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + botText + '<span class="msg_time">' + str_time + '</span></div></div>';
-                    $("#messageFormeight").append($.parseHTML(botHtml));
-                });
-            });
-    </script>
-</body>
+      <script src="{{url_for('static', filename='chatbot.js')}}"></script>
+  </body>
 </html>
