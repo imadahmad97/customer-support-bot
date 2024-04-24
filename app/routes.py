@@ -21,6 +21,7 @@ def init_routes(app):
         if request.method == "POST":
             username = request.form["username"]
             password = request.form["password"]
+            email = request.form["email"]
 
             existing_user = User.query.filter_by(username=username).first()
             if existing_user:
@@ -28,7 +29,9 @@ def init_routes(app):
                 return redirect(url_for("register"))
 
             new_user = User(
-                username=username, password_hash=generate_password_hash(password)
+                username=username,
+                password_hash=generate_password_hash(password),
+                email=email,
             )
             db.session.add(new_user)
             db.session.commit()
@@ -54,12 +57,11 @@ def init_routes(app):
         return render_template("login.html")
 
     def configure_model():
-        with app.app_context():  # Ensures this is called within an app context
+        with app.app_context():
             genai.configure(api_key=current_app.config["GOOGLE_API_KEY"])
             model = genai.GenerativeModel("gemini-pro")
         return model
 
-    # Instantiate the model when needed, ideally in a route or background task
     @app.route("/model")
     def load_model():
         model = configure_model()
