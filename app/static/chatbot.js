@@ -1,17 +1,14 @@
 $(document).ready(function () {
   $("#initialQuestionsModal").modal("show");
 
-  // Initially show only the first question and hide others
-  $(".question").hide(); // Hide all questions
-  $("#question1").show(); // Show only the first question
+  $(".question").hide();
+  $("#question1").show();
 
-  // Handle clicking on the "Add Row" button
   $("#addRow").click(function () {
       var newRow = '<tr contenteditable="true"><td><textarea class="form-control"></textarea></td><td><textarea class="form-control"></textarea></td></tr>';
       $("#issuesTable tbody").append(newRow);
   });
 
-  // Handle clicking on the "Next" button
   $(".next-btn").click(function () {
       var currentQuestion = $(this).closest(".question");
       var nextQuestion = currentQuestion.next(".question");
@@ -24,8 +21,16 @@ $(document).ready(function () {
       }
   });
 
-  // Handle clicking on the "Submit Questions" button
   $("#submitQuestions").click(function () {
+      var issuesList = [];
+      $("#issuesTable tbody tr").each(function() {
+          var problem = $(this).find('textarea').first().val();
+          var solution = $(this).find('textarea').last().val();
+          if (problem && solution) {
+              issuesList.push({ problem: problem, solution: solution });
+          }
+      });
+
       var allData = {
           companyContext: $("#companyContext").val(),
           botInfo: $("#botInfo").val(),
@@ -41,15 +46,15 @@ $(document).ready(function () {
           data: JSON.stringify(allData),
           success: function () {
               console.log("Context updated successfully.");
-              $("#initialQuestionsModal").modal("hide");
+              window.location.href = "/chat";
           },
           error: function () {
               console.error("Failed to update context.");
           }
       });
   });
-
 });
+
 
 
   $("#messageArea").on("submit", function (event) {
