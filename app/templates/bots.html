@@ -1,0 +1,25 @@
+{% block content %}
+<div class="container">
+    <h1>Your Chatbots</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Context</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bot in chatbots %}
+            <tr>
+                <td>{{ bot.id }}</td>
+                <td>{{ bot.context }}</td>
+                <td>
+                    <a href="{{ url_for('chat_with_bot', bot_id=bot.id) }}" class="btn btn-primary">Chat</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

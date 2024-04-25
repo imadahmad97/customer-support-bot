@@ -7,10 +7,10 @@ from flask import (
     jsonify,
     current_app,
 )
-from flask_login import login_user, login_required, logout_user, login_manager
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import google.generativeai as genai
-from .models import User
+from .models import User, Chatbot
 from .extensions import db
 
 
@@ -58,64 +58,73 @@ def init_routes(app):
                 return redirect(url_for("login"))
         return render_template("login.html")
 
+    @app.route("/bots")
+    @login_required
+    def bots():
+        chatbots = Chatbot.query.filter_by(user_id=current_user.get_id()).all()
+        return render_template("bots.html", chatbots=chatbots)
+
     def configure_model():
         with app.app_context():
             genai.configure(api_key=current_app.config["GOOGLE_API_KEY"])
             model = genai.GenerativeModel("gemini-pro")
         return model
 
-    @app.route("/model")
-    def load_model():
-        model = configure_model()
-        return jsonify({"message": "Model configured"})
-
-    @app.route("/questions")
+    @app.route("/questions", methods=["GET", "POST"])
     @login_required
     def questions():
+        if request.method == "POST":
+            data = request.get_json()
+            companyContext = data.get("companyContext")
+            botInfo = data.get("botInfo")
+            botGoals = data.get("botGoals")
+            issues = data.get("issues")
+            botLang = data.get("botLang")
+            print(issues)
+
+            new_chatbot = Chatbot(
+                user_id=current_user.id,
+                context=companyContext + botInfo,
+            )
+
+            db.session.add(new_chatbot)
+            db.session.commit()
+
+            print("Chatbot created successfully!")
+            return redirect(url_for("bots"))
+
         return render_template("questions.html")
 
-    @app.route("/chat")
+    @app.route("/chat/<int:bot_id>")
     @login_required
-    def chat():
-        return render_template("chat.html")
+    def chat_with_bot(bot_id):
+        bot = Chatbot.query.get_or_404(bot_id)
+        if bot.user_id != current_user.id:
+            return redirect(url_for("bots"))
+        initial_context = bot.context
+        return render_template("chat.html", bot=bot, initial_context=initial_context)
 
-    @app.route("/get", methods=["POST"])
-    def get_Chat_response():
+    @app.route("/get/<int:bot_id>", methods=["POST"])
+    @login_required
+    def get_Chat_response(bot_id):
+        bot = Chatbot.query.get_or_404(bot_id)
+        if bot.user_id != current_user.id:
+            return jsonify({"error": "Unauthorized access to bot"}), 403
+
         user_input = request.json.get("msg")
-        global global_context
         if not user_input:
             return jsonify({"error": "No user input provided"}), 400
 
         try:
             model = configure_model()
-            prompt = global_context + "Customer: " + user_input + "\nBot:"
+            prompt = user_input
+            print(prompt)
             response = model.generate_content(prompt)
             response_text = response._result.candidates[0].content.parts[0].text
             return jsonify({"response": response_text})
         except Exception as e:
             print("Failed to generate or parse response:", str(e))
             return jsonify({"error": "Failed to generate response"}), 500
-
-    def chat():
-        print("Received data:", request.json)
-        user_input = request.json.get("msg")
-        if not user_input:
-            return jsonify({"error": "No user input provided"}), 400
-        model = configure_model()
-        return get_Chat_response(user_input)
-
-    @app.route("/setContext", methods=["POST"])
-    def set_context():
-        data = request.get_json()
-        print(data)
-        companyContext = data.get("companyContext")
-        botInfo = data.get("botInfo")
-        global global_context
-        global_context = f"""
-        This is a customer service bot designed to assist with inquiries about products and services offered by {companyContext}. It's name is {botInfo}
-        """
-        print(global_context)
-        return global_context
 
     @app.route("/logout")
     def logout():
