@@ -118,7 +118,6 @@ def init_routes(app):
         try:
             model = configure_model()
             prompt = user_input
-            print(prompt)
             response = model.generate_content(prompt)
             response_text = response._result.candidates[0].content.parts[0].text
             return jsonify({"response": response_text})
