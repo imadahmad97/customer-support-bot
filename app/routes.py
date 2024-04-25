@@ -7,7 +7,7 @@ from flask import (
     jsonify,
     current_app,
 )
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 import google.generativeai as genai
 from .models import User
@@ -15,6 +15,9 @@ from .extensions import db
 
 
 def init_routes(app):
+    @app.route("/")
+    def land():
+        return redirect(url_for("login"))
 
     @app.route("/register", methods=["GET", "POST"])
     def register():
@@ -67,6 +70,7 @@ def init_routes(app):
         return jsonify({"message": "Model configured"})
 
     @app.route("/questions")
+    @login_required
     def questions():
         return render_template("questions.html")
 
