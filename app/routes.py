@@ -7,7 +7,7 @@ from flask import (
     jsonify,
     current_app,
 )
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import google.generativeai as genai
 from .models import User
@@ -49,8 +49,7 @@ def init_routes(app):
             user = User.query.filter_by(username=username).first()
             if user and check_password_hash(user.password_hash, password):
                 login_user(user)
-                flash("Login successful!")
-                return redirect(url_for("index"))
+                return redirect(url_for("chat"))
             else:
                 flash("Invalid username or password. Please try again.")
                 return redirect(url_for("login"))
@@ -67,19 +66,25 @@ def init_routes(app):
         model = configure_model()
         return jsonify({"message": "Model configured"})
 
-    @app.route("/")
-    def index():
+    @app.route("/questions")
+    def questions():
+        return render_template("questions.html")
+
+    @app.route("/chat")
+    @login_required
+    def chat():
         return render_template("chat.html")
 
     @app.route("/get", methods=["POST"])
     def get_Chat_response():
         user_input = request.json.get("msg")
+        global global_context
         if not user_input:
             return jsonify({"error": "No user input provided"}), 400
 
         try:
-            model = configure_model()  # Ensure model is configured correctly
-            prompt = "Customer: " + user_input + "\nBot:"
+            model = configure_model()
+            prompt = global_context + "Customer: " + user_input + "\nBot:"
             response = model.generate_content(prompt)
             response_text = response._result.candidates[0].content.parts[0].text
             return jsonify({"response": response_text})
@@ -98,5 +103,17 @@ def init_routes(app):
     @app.route("/setContext", methods=["POST"])
     def set_context():
         data = request.get_json()
-        global_context = "Info about the bot and its context..."
-        return jsonify({"message": "Context updated successfully"})
+        print(data)
+        companyContext = data.get("companyContext")
+        botInfo = data.get("botInfo")
+        global global_context
+        global_context = f"""
+        This is a customer service bot designed to assist with inquiries about products and services offered by {companyContext}. It's name is {botInfo}
+        """
+        print(global_context)
+        return global_context
+
+    @app.route("/logout")
+    def logout():
+        logout_user()
+        return redirect(url_for("login"))
