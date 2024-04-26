@@ -88,9 +88,15 @@ def init_routes(app):
             username = request.form["username"]
             password = request.form["password"]
             user = User.query.filter_by(username=username).first()
-            if user and check_password_hash(user.password_hash, password):
+            if (
+                user
+                and check_password_hash(user.password_hash, password)
+                and user.is_confirmed
+            ):
                 login_user(user)
                 return redirect(url_for("bots"))
+            elif user and check_password_hash(user.password_hash, password):
+                flash("Please verify your email")
             else:
                 flash("Invalid username or password. Please try again.")
                 return redirect(url_for("login"))

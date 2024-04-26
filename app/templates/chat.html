@@ -31,6 +31,8 @@
     />
   </head>
   <body>
+    {% include 'header.html' %}
+    {% block content %}{% endblock %}
     <div id="botId" data-id="{{ bot.id }}" style="display:none;"></div>
     <!-- Chat interface -->
     <div class="container-fluid h-100">

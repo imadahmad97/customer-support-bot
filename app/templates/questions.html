@@ -11,6 +11,8 @@
     />
   </head>
   <body>
+    {% include 'header.html' %}
+    {% block content %}{% endblock %}
     <!-- Modal for Initial Questions -->
     <div class="modal" tabindex="-1" role="dialog" id="initialQuestionsModal">
       <div class="modal-dialog" role="document">

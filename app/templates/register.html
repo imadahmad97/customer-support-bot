@@ -4,6 +4,8 @@
   <title>Register</title>
 </head>
 <body>
+  {% include 'header.html' %}
+  {% block content %}{% endblock %}
   <h2>Register</h2>
   <form method="post">
       Username: <input type="text" name="username" required><br>
