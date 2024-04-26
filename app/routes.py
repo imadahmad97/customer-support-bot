@@ -12,6 +12,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import google.generativeai as genai
 from .models import User, Chatbot
 from .extensions import db
+from .token import confirm_token, generate_token
+from datetime import datetime
+from .utils import send_email
 
 
 def init_routes(app):
@@ -35,14 +38,43 @@ def init_routes(app):
                 username=username,
                 password_hash=generate_password_hash(password),
                 email=email,
+                created_on=datetime.now(),
+                is_admin=True,  # Ensure logical values are properly set; use True instead of 1 for clarity
+                is_confirmed=False,  # Set as False initially, or True if you're confirming immediately
+                confirmed_on=None,  # Set to None if not confirmed; change only when confirmed
             )
+
             db.session.add(new_user)
             db.session.commit()
+
+            token = generate_token(new_user.email)
+            confirm_url = url_for("confirm_email", token=token, _external=True)
+            html = render_template("confirm_email.html", confirm_url=confirm_url)
+            subject = "Please confirm your email"
+            send_email(new_user.email, subject, html)
 
             flash("Registration successful! Please log in.")
             return redirect(url_for("login"))
 
         return render_template("register.html")
+
+    @app.route("/confirm/<token>")
+    @login_required
+    def confirm_email(token):
+        if current_user.is_confirmed:
+            flash("Account already confirmed.", "success")
+            return redirect(url_for("register"))
+        email = confirm_token(token)
+        user = User.query.filter_by(email=current_user.email).first_or_404()
+        if user.email == email:
+            user.is_confirmed = True
+            user.confirmed_on = datetime.now()
+            db.session.add(user)
+            db.session.commit()
+            flash("You have confirmed your account. Thanks!", "success")
+        else:
+            flash("The confirmation link is invalid or has expired.", "danger")
+        return redirect(url_for("register"))
 
     @app.route("/login", methods=["GET", "POST"])
     def login():
@@ -52,7 +84,7 @@ def init_routes(app):
             user = User.query.filter_by(username=username).first()
             if user and check_password_hash(user.password_hash, password):
                 login_user(user)
-                return redirect(url_for("chat"))
+                return redirect(url_for("bots"))
             else:
                 flash("Invalid username or password. Please try again.")
                 return redirect(url_for("login"))
