@@ -24,12 +24,12 @@ def create_app():
         return User.query.get(int(user_id))
 
     app.config.update(
-        MAIL_SERVER="smtp.mail.yahoo.com",
-        MAIL_PORT=587,
-        MAIL_USE_TLS=True,
-        MAIL_USERNAME="imadahmad97@yahoo.ca",
-        MAIL_PASSWORD="umjznypifyortcqr",
-        MAIL_DEFAULT_SENDER="imadahmad97@yahoo.ca",
+        MAIL_SERVER=Config.MAIL_SERVER,
+        MAIL_PORT=Config.MAIL_PORT,
+        MAIL_USE_TLS=Config.MAIL_USE_TLS,
+        MAIL_USERNAME=Config.MAIL_USERNAME,
+        MAIL_PASSWORD=Config.MAIL_PASSWORD,
+        MAIL_DEFAULT_SENDER=Config.MAIL_DEFAULT_SENDER,
     )
     bcrypt.init_app(app)
 

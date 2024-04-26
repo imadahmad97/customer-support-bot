@@ -59,22 +59,28 @@ def init_routes(app):
         return render_template("register.html")
 
     @app.route("/confirm/<token>")
-    @login_required
     def confirm_email(token):
-        if current_user.is_confirmed:
-            flash("Account already confirmed.", "success")
-            return redirect(url_for("register"))
         email = confirm_token(token)
-        user = User.query.filter_by(email=current_user.email).first_or_404()
-        if user.email == email:
-            user.is_confirmed = True
-            user.confirmed_on = datetime.now()
-            db.session.add(user)
-            db.session.commit()
-            flash("You have confirmed your account. Thanks!", "success")
-        else:
+        if not email:
             flash("The confirmation link is invalid or has expired.", "danger")
-        return redirect(url_for("register"))
+            return redirect(
+                url_for("login")
+            )  # Redirect to login instead of register to avoid confusion.
+
+        user = User.query.filter_by(email=email).first()
+        if user is None:
+            flash("No account found for this email.", "danger")
+            return redirect(url_for("register"))
+
+        if user.is_confirmed:
+            flash("Account already confirmed.", "success")
+            return redirect(url_for("login"))
+
+        user.is_confirmed = True
+        user.confirmed_on = datetime.now()
+        db.session.commit()
+        flash("You have confirmed your account. Thanks!", "success")
+        return redirect(url_for("login"))
 
     @app.route("/login", methods=["GET", "POST"])
     def login():
