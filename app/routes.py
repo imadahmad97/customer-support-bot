@@ -22,42 +22,6 @@ def init_routes(app):
     def land():
         return render_template("index.html")
 
-    @app.route("/register", methods=["GET", "POST"])
-    def register():
-        if request.method == "POST":
-            username = request.form["username"]
-            password = request.form["password"]
-            email = request.form["email"]
-
-            existing_user = User.query.filter_by(username=username).first()
-            if existing_user:
-                flash("Username already exists. Please choose a different one.")
-                return redirect(url_for("register"))
-
-            new_user = User(
-                username=username,
-                password_hash=generate_password_hash(password),
-                email=email,
-                created_on=datetime.now(),
-                is_admin=True,  # Ensure logical values are properly set; use True instead of 1 for clarity
-                is_confirmed=False,  # Set as False initially, or True if you're confirming immediately
-                confirmed_on=None,  # Set to None if not confirmed; change only when confirmed
-            )
-
-            db.session.add(new_user)
-            db.session.commit()
-
-            token = generate_token(new_user.email)
-            confirm_url = url_for("confirm_email", token=token, _external=True)
-            html = render_template("confirm_email.html", confirm_url=confirm_url)
-            subject = "Please confirm your email"
-            send_email(new_user.email, subject, html)
-
-            flash("Registration successful! Please log in.")
-            return redirect(url_for("login"))
-
-        return render_template("register.html")
-
     @app.route("/confirm/<token>")
     def confirm_email(token):
         email = confirm_token(token)
@@ -83,23 +47,57 @@ def init_routes(app):
         return redirect(url_for("login"))
 
     @app.route("/login", methods=["GET", "POST"])
-    def login():
+    def login_register():
         if request.method == "POST":
-            username = request.form["username"]
-            password = request.form["password"]
-            user = User.query.filter_by(username=username).first()
-            if (
-                user
-                and check_password_hash(user.password_hash, password)
-                and user.is_confirmed
-            ):
-                login_user(user)
-                return redirect(url_for("bots"))
-            elif user and check_password_hash(user.password_hash, password):
-                flash("Please verify your email")
-            else:
-                flash("Invalid username or password. Please try again.")
-                return redirect(url_for("login"))
+            action = request.form.get("action")
+            if action == "Register":
+                username = request.form["username"]
+                password = request.form["password"]
+                email = request.form["email"]
+
+                existing_user = User.query.filter_by(username=username).first()
+                if existing_user:
+                    flash("Username already exists. Please choose a different one.")
+                    return redirect(url_for("login_register"))
+
+                new_user = User(
+                    username=username,
+                    password_hash=generate_password_hash(password),
+                    email=email,
+                    created_on=datetime.now(),
+                    is_admin=True,
+                    is_confirmed=False,
+                    confirmed_on=None,
+                )
+
+                db.session.add(new_user)
+                db.session.commit()
+
+                token = generate_token(new_user.email)
+                confirm_url = url_for("confirm_email", token=token, _external=True)
+                html = render_template("confirm_email.html", confirm_url=confirm_url)
+                subject = "Please confirm your email"
+                send_email(new_user.email, subject, html)
+
+                flash("Registration successful! Please log in.")
+                return redirect(url_for("login_register"))
+
+            elif action == "Login":
+                username = request.form["username"]
+                password = request.form["password"]
+                user = User.query.filter_by(username=username).first()
+                if (
+                    user
+                    and check_password_hash(user.password_hash, password)
+                    and user.is_confirmed
+                ):
+                    login_user(user)
+                    return redirect(url_for("bots"))
+                elif user and check_password_hash(user.password_hash, password):
+                    flash("Please verify your email")
+                else:
+                    flash("Invalid username or password. Please try again.")
+                    return redirect(url_for("login_register"))
         return render_template("login.html")
 
     @app.route("/bots")
