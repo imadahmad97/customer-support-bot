@@ -20,7 +20,7 @@ from .utils import send_email
 def init_routes(app):
     @app.route("/")
     def land():
-        return redirect(url_for("login"))
+        return render_template("index.html")
 
     @app.route("/register", methods=["GET", "POST"])
     def register():
