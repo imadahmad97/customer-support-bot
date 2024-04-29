@@ -1,12 +1,19 @@
-<header class="site-header">
-    <div class="site-identity">
-      <a href="#"><img src="https://i.ibb.co/vj9cDHv/181774572-2.png" alt="Site Name" /></a>
-    </div>  
-    <nav class="site-navigation">
-      <ul class="nav">
-        <li><a href="#">Platform</a></li> 
-        <li><a href="#">Solutions</a></li> 
-        <li><a href="#">Pricing</a></li> 
+<link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='header.css') }}"
+    />
+<header>
+  <div class="container">
+    <h1 class="logo"></h1>
+    <img src="https://i.ibb.co/6b39FDs/resized.png" width="200">
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Contact</a></li>
       </ul>
     </nav>
-  </header>
+  </div>
+</header>

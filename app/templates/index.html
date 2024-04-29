@@ -27,13 +27,15 @@
         </header>
 
         <main>
+            {% include 'header.html' %}
+            {% block content %}{% endblock %}
             <section class="hero">
                 <div class="container">
                     <div class="hero-inner">
 						<div class="hero-copy">
 	                        <h1 class="hero-title mt-0">Elevate your customer service system today!</h1>
 	                        <p class="hero-paragraph">With our custom chatbot creation system, you can customize and perfectly tailor the chatbot to your company's specific needs.</p>
-	                        <div class="hero-cta"><a class="button button-primary" href="#">Try now!</a><a class="button" href="#">Login</a></div>
+	                        <div class="hero-cta"><a class="button button-primary" href="#">Try now!</a><a class="button" href="login">Login</a></div>
 						</div>
 						<div class="hero-figure anime-element">
                             <img class="chatbot-image-01" src="https://i.ibb.co/nbjZnHd/chatbot.png" width="52">
@@ -42,7 +44,6 @@
 							</svg>
 							<div class="hero-figure-box hero-figure-box-01" data-rotation="45deg"></div>
 							<div class="hero-figure-box hero-figure-box-02" data-rotation="-45deg"></div>
-							<div class="hero-figure-box hero-figure-box-03" data-rotation="0deg"></div>
 							<div class="hero-figure-box hero-figure-box-04" data-rotation="-135deg"></div>
 							<div class="hero-figure-box hero-figure-box-05"></div>
 							<div class="hero-figure-box hero-figure-box-06"></div>

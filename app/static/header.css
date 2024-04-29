@@ -1,16 +1,72 @@
-header {
-  overflow: hidden;
-  background-color: #f1f1f1;
-  padding: 20px 10px;
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
+body {
+	margin: 0;
+	background: #222;
 }
 
-header a {
+.container {
+	width: 80%;
+	margin: 0 auto;
+}
+
+header {
+  background: #536872;
+}
+
+header::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.logo {
   float: left;
-  color: black;
-  text-align: center;
-  padding: 12px;
+  padding-top: 100;
+}
+
+nav {
+  float: right;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav li {
+  display: inline-block;
+  margin-left: 70px;
+  padding-top: 23px;
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 800;
+  position: relative;
+}
+
+nav a {
+  color: white;
   text-decoration: none;
-  font-size: 18px;
-  line-height: 25px;
-  border-radius: 4px;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: #000;
+}
+
+nav a::before {
+  content: '';
+  display: block;
+  height: 5px;
+  background-color: #444;
+
+  position: absolute;
+  top: 0;
+  width: 0%;
+
+  transition: all ease-in-out 250ms;
+}
+
+nav a:hover::before {
+  width: 100%;
 }
