@@ -6,6 +6,7 @@ from flask import (
     flash,
     jsonify,
     current_app,
+    session,
 )
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -114,34 +115,39 @@ def init_routes(app):
             model = genai.GenerativeModel("gemini-pro")
         return model
 
+    @app.route("/submit-initial-config", methods=["GET", "POST"])
+    def submit_initial_config():
+        # Temporarily save the initial config to the session or another temporary store
+        session["initial_config"] = request.form.to_dict()
+        return jsonify(status="success"), 200
+
     @app.route("/create-new-bot", methods=["GET", "POST"])
     def create_new_bot():
-        return render_template("create_chatbot.html")
-
-    @app.route("/questions", methods=["GET", "POST"])
-    @login_required
-    def questions():
         if request.method == "POST":
-            data = request.get_json()
-            companyContext = data.get("companyContext")
-            botInfo = data.get("botInfo")
-            botGoals = data.get("botGoals")
-            issues = data.get("issues")
-            botLang = data.get("botLang")
-            print(issues)
+            if "initial_config" in session:
+                initial_config = session.pop("initial_config", {})
+                print(initial_config)
+                detailed_info = request.get_json()
 
-            new_chatbot = Chatbot(
-                user_id=current_user.id,
-                context=companyContext + botInfo,
-            )
+                new_chatbot = Chatbot(
+                    user_id=current_user.id,
+                    context=detailed_info["companyContext"]
+                    + " "
+                    + detailed_info["botInfo"]
+                    + " "
+                    + detailed_info["botGoals"],
+                    chatbotName=initial_config["chatbotName"],
+                    cardBgColor=initial_config["cardBgColor"],
+                    msgContainerColor=initial_config["msgContainerColor"],
+                    msgContainerSendColor=initial_config["msgContainerSendColor"],
+                    userImgColor=initial_config["userImgColor"],
+                )
+                db.session.add(new_chatbot)
+                db.session.commit()
+                print("Created bot")
+                return redirect(url_for("bots"))
 
-            db.session.add(new_chatbot)
-            db.session.commit()
-
-            print("Chatbot created successfully!")
-            return redirect(url_for("bots"))
-
-        return render_template("questions.html")
+        return render_template("create_chatbot.html")
 
     @app.route("/chat/<int:bot_id>")
     @login_required

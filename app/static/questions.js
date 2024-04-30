@@ -42,7 +42,7 @@ $(document).ready(function () {
   
         $.ajax({
             type: "POST",
-            url: "/questions",
+            url: "/create-new-bot",
             contentType: "application/json",
             data: JSON.stringify(allData),
             success: function () {

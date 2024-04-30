@@ -26,7 +26,7 @@ class Chatbot(db.Model):
     __tablename__ = "chatbots"
     id = db.Column(db.Integer, primary_key=True, default=random_six_digit_number)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    context = db.Column(db.String)
+    context = db.Column(db.String, default="default context")
     chatbotName = db.Column(db.String(255), default="ChatBot")
     cardBgColor = db.Column(db.String(10), default="#FFFFFF")
     msgContainerColor = db.Column(db.String(10), default="#FFFFFF")
