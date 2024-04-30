@@ -27,6 +27,11 @@ class Chatbot(db.Model):
     id = db.Column(db.Integer, primary_key=True, default=random_six_digit_number)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     context = db.Column(db.String)
+    chatbotName = db.Column(db.String(255), default="ChatBot")
+    cardBgColor = db.Column(db.String(10), default="#FFFFFF")
+    msgContainerColor = db.Column(db.String(10), default="#FFFFFF")
+    msgContainerSendColor = db.Column(db.String(10), default="#FFFFFF")
+    userImgColor = db.Column(db.String(10), default="#FFFFFF")
 
     def __repr__(self):
         return f"<Chatbot {self.id} owned by user {self.user_id}>"

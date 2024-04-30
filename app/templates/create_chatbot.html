@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <title>Create a new bot</title>
+<body>
+    <form action="/update_settings" method="post">
+        <!-- Chatbot Name -->
+        <div class="form-group">
+          <label for="chatbotName">Chatbot Name:</label>
+          <input type="text" class="form-control" id="chatbotName" name="chatbotName" value="ChatBot">
+        </div>
+      
+        <!-- Color Pickers -->
+        <div class="form-group">
+          <label for="cardBgColor">Card Background Color:</label>
+          <input type="color" class="form-control" id="cardBgColor" name="cardBgColor">
+        </div>
+        <div class="form-group">
+          <label for="msgContainerColor">Message Container Background Color:</label>
+          <input type="color" class="form-control" id="msgContainerColor" name="msgContainerColor">
+        </div>
+        <div class="form-group">
+          <label for="msgContainerSendColor">Message Container Send Background Color:</label>
+          <input type="color" class="form-control" id="msgContainerSendColor" name="msgContainerSendColor">
+        </div>
+        <div class="form-group">
+          <label for="userImgColor">User Image Background Color:</label>
+          <input type="color" class="form-control" id="userImgColor" name="userImgColor">
+        </div>
+      
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+</body>      

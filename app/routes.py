@@ -114,6 +114,10 @@ def init_routes(app):
             model = genai.GenerativeModel("gemini-pro")
         return model
 
+    @app.route("/create-new-bot", methods=["GET", "POST"])
+    def create_new_bot():
+        return render_template("create_chatbot.html")
+
     @app.route("/questions", methods=["GET", "POST"])
     @login_required
     def questions():
