@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
 body {
 	margin: 0;
-	background: #36454F;
+	background: #536872;
 }
 
-.container {
+.header-container {
 	width: 80%;
 	margin: 0 auto;
 
 }
 
 header {
-  background: #536872;
+  background: #36454F;
 }
 
 header::after {
