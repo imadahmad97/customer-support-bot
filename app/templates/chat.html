@@ -29,7 +29,22 @@
       type="text/css"
       href="{{ url_for('static', filename='style.css') }}"
     />
+    <style>
+      .card {
+        background-color: {{ card_bg_color }};
+      }
+      .msg_container {
+        background-color: {{ msg_container_color }} !important;
+      }
+      .msg_container_send {
+        background-color: {{ msg_container_send_color }} !important;
+      }
+      .user_img {
+        background-color: {{ user_img_color }} !important;
+      }
+    </style>
   </head>
+  
   <body>
     {% include 'header.html' %}
     {% block content %}{% endblock %}

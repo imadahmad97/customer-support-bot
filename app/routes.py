@@ -156,7 +156,19 @@ def init_routes(app):
         if bot.user_id != current_user.id:
             return redirect(url_for("bots"))
         initial_context = bot.context
-        return render_template("chat.html", bot=bot, initial_context=initial_context)
+        cardBgColor = bot.cardBgColor
+        msgContainerColor = bot.msgContainerColor
+        msgContainerSendColor = bot.msgContainerSendColor
+        userImgColor = bot.userImgColor
+        return render_template(
+            "chat.html",
+            bot=bot,
+            initial_context=initial_context,
+            card_bg_color=cardBgColor,
+            msg_container_color=msgContainerColor,
+            msg_container_send_color=msgContainerSendColor,
+            user_img_color=userImgColor,
+        )
 
     @app.route("/get/<int:bot_id>", methods=["POST"])
     @login_required
