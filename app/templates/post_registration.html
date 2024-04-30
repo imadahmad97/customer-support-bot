@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+  <title>Confirm your email</title>
+  <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='post_registration.css') }}"
+    />
+</head>
+<body>
+    {% block content %}
+    {% include 'header.html' %}
+    {% endblock %}
+    <div class="confirm-email-section">
+        <h1>Confirm Your Email</h1>
+        <p>Please click the link in your email to confirm your registration!</p>
+        <img src="https://i.ibb.co/8c19HGb/robot.png" height="250"/>
+    </div>
+</body>

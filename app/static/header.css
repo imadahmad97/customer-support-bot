@@ -2,6 +2,8 @@
 body {
 	margin: 0;
 	background: #536872;
+  font-family: 'Work Sans', sans-serif;
+	font-weight: 800;
 }
 
 .header-container {

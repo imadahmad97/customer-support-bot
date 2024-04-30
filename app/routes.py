@@ -22,6 +22,10 @@ def init_routes(app):
     def land():
         return render_template("index.html")
 
+    @app.route("/confirm_email")
+    def post_registration():
+        return render_template("post_registration.html")
+
     @app.route("/confirm/<token>")
     def confirm_email(token):
         email = confirm_token(token)
@@ -80,7 +84,7 @@ def init_routes(app):
                 send_email(new_user.email, subject, html)
 
                 flash("Registration successful! Please log in.")
-                return redirect(url_for("login_register"))
+                return redirect(url_for("post_registration"))
 
             elif action == "Login":
                 username = request.form["username"]

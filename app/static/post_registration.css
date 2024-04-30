@@ -1,0 +1,15 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+  }
+
+.confirm-email-section {
+    color: white;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #536872;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
