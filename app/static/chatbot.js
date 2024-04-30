@@ -8,7 +8,7 @@ function sendInitialContext(botId, context) {
           var botText = data.response;
           var date = new Date();
           var str_time = date.getHours() + ":" + date.getMinutes();
-          var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + botText + '<span class="msg_time">' + str_time + "</span></div></div>";
+          var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://i.ibb.co/nbjZnHd/chatbot.png" class="rounded-circle user_img_msg"></div><div class="msg_container">' + botText + '<span class="msg_time">' + str_time + "</span></div></div>";
           $("#messageFormeight").append($.parseHTML(botHtml));
       },
       error: function (error) {
@@ -33,11 +33,11 @@ $(document).ready(function () {
       const rawText = $("#text").val();
 
       var userHtml =
-          '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' +
+          '<div class="d-flex justify-content-end mb-4"><div class="msg_container_send">' +
           rawText +
           '<span class="msg_time_send">' +
           str_time +
-          '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="rounded-circle user_img_msg"></div></div>';
+          '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/nbjZnHd/chatbot.png" class="rounded-circle user_img_msg"></div></div>';
       $("#text").val("");
       $("#messageFormeight").append(userHtml);
 
@@ -49,7 +49,7 @@ $(document).ready(function () {
           success: function (data) {
               var botText = data.response;
               var botHtml =
-                  '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://i.ibb.co/fSNP7Rz/icons8-chatgpt-512.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' +
+                  '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://i.ibb.co/nbjZnHd/chatbot.png" class="rounded-circle user_img_msg"></div><div class="msg_container">' +
                   botText +
                   '<span class="msg_time">' +
                   str_time +

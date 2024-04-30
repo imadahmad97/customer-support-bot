@@ -31,9 +31,7 @@ def init_routes(app):
         email = confirm_token(token)
         if not email:
             flash("The confirmation link is invalid or has expired.", "danger")
-            return redirect(
-                url_for("login")
-            )  # Redirect to login instead of register to avoid confusion.
+            return redirect(url_for("login_register"))
 
         user = User.query.filter_by(email=email).first()
         if user is None:
@@ -48,7 +46,7 @@ def init_routes(app):
         user.confirmed_on = datetime.now()
         db.session.commit()
         flash("You have confirmed your account. Thanks!", "success")
-        return redirect(url_for("login"))
+        return redirect(url_for("login_register"))
 
     @app.route("/login", methods=["GET", "POST"])
     def login_register():
@@ -174,4 +172,4 @@ def init_routes(app):
     @app.route("/logout")
     def logout():
         logout_user()
-        return redirect(url_for("login"))
+        return redirect(url_for("login_register"))
