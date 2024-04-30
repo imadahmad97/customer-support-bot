@@ -38,11 +38,11 @@ def init_routes(app):
         user = User.query.filter_by(email=email).first()
         if user is None:
             flash("No account found for this email.", "danger")
-            return redirect(url_for("register"))
+            return redirect(url_for("login_register"))
 
         if user.is_confirmed:
             flash("Account already confirmed.", "success")
-            return redirect(url_for("login"))
+            return redirect(url_for("login_register"))
 
         user.is_confirmed = True
         user.confirmed_on = datetime.now()
