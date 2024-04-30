@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
+.bot-table {
+    border-collapse: separate;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius:6px;
+    border:solid #20B2AA 3px;
+    font-family: 'Work Sans', sans-serif;
+	font-weight: 800;
+}
+body {
+	margin: 0;
+    background-color: #009879;
+}
+
+
+.bot-table thead tr {
+    background-color: #725368;
+    color: #ffffff;
+    text-align: left;
+}
+
+.bot-table th,
+.bot-table td {
+    padding: 12px 15px;
+}
+
+.bot-table th {
+    background-color: #20B2AA;
+    border-top: none;
+}
+
+.bot-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    color: black;
+}
+
+.bot-table tbody tr {
+    background-color: #96DED1;
+}
+
+.bot-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.bot-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}

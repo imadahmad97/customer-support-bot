@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
 body {
 	margin: 0;
-	background: #222;
+	background: #36454F;
 }
 
 .container {
 	width: 80%;
 	margin: 0 auto;
+
 }
 
 header {
@@ -21,7 +22,6 @@ header::after {
 
 .logo {
   float: left;
-  padding-top: 100;
 }
 
 

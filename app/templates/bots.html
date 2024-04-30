@@ -1,8 +1,18 @@
+<!doctype html>
+<html>
+<head>
+  <title>Login</title>
+  <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='bots.css') }}"
+    />
+</head>
+<body>
 {% block content %}
 {% include 'header.html' %}
 <div class="container">
-    <h1>Your Chatbots</h1>
-    <table class="table">
+    <table class="bot-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -23,4 +33,6 @@
         </tbody>
     </table>
 </div>
+<img src="https://i.ibb.co/K7SgD9S/man.png"/>
+</body>
 {% endblock %}
