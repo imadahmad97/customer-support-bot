@@ -89,12 +89,13 @@ border-radius: 0 0 15px 15px !important;
 .active{
 	background-color: rgba(0,0,0,0.3);
 }
-.user_img{
-	height: 70px;
-	width: 70px;
-	border:1.5px solid #f5f6fa;
-	background-color: #4cd137;
-
+.user_img {
+    height: 100px;
+    width: 100px;
+    border: 1.5px solid #f5f6fa;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
 }
 .user_img_msg{
 	height: 40px;
@@ -112,23 +113,12 @@ border-radius: 0 0 15px 15px !important;
 	height: 40px;
 	width: 40px;
 }
-.online_icon{
-	position: absolute;
-	height: 15px;
-	width:15px;
-	background-color: #4cd137;
-	border-radius: 50%;
-	bottom: 0.2em;
-	right: 0.4em;
-	border:1.5px solid white;
-}
-.offline{
-	background-color: #c23616 !important;
-}
+
 .user_info{
 	margin-top: auto;
 	margin-bottom: auto;
 	margin-left: 15px;
+	padding-left: 30px;
 }
 .user_info span{
 	font-size: 20px;
@@ -182,6 +172,7 @@ border-radius: 0 0 15px 15px !important;
 }
 .msg_head{
 	position: relative;
+	height: 120px;
 }
 #action_menu_btn{
 	position: absolute;
