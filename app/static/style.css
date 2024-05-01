@@ -90,8 +90,8 @@ border-radius: 0 0 15px 15px !important;
 	background-color: rgba(0,0,0,0.3);
 }
 .user_img {
-    height: 100px;
-    width: 100px;
+    height: 70px;
+    width: 70px;
     border: 1.5px solid #f5f6fa;
     border-radius: 50%;
     object-fit: cover;
@@ -103,6 +103,9 @@ border-radius: 0 0 15px 15px !important;
 	border:1.5px solid #f5f6fa;
 	background-color: #4cd137;
 
+}
+.img_cont, .user_info {
+    flex: 0 0 auto;
 }
 .img_cont{
 	position: relative;
@@ -170,9 +173,10 @@ border-radius: 0 0 15px 15px !important;
 	color: rgba(255,255,255,0.5);
 	font-size: 10px;
 }
-.msg_head{
-	position: relative;
-	height: 120px;
+.msg_head {
+    display: flex;
+    align-items: center; 
+    justify-content: start;  
 }
 #action_menu_btn{
 	position: absolute;

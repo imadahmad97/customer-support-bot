@@ -37,7 +37,7 @@ $(document).ready(function () {
           rawText +
           '<span class="msg_time_send">' +
           str_time +
-          '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/nbjZnHd/chatbot.png" class="rounded-circle user_img_msg"></div></div>';
+          '</span></div><div class="img_cont_msg"><img src="https://iili.io/JgELtiF.png" class="rounded-circle user_img_msg"></div></div>';
       $("#text").val("");
       $("#messageFormeight").append(userHtml);
 

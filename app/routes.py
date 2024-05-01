@@ -117,6 +117,26 @@ def init_routes(app):
             model = genai.GenerativeModel("gemini-pro")
         return model
 
+    @app.route("/chat_preview")
+    def chat_preview():
+        bot = Chatbot.query.get_or_404(12)
+        initial_context = bot.context
+        cardBgColor = bot.cardBgColor
+        msgContainerColor = bot.msgContainerColor
+        msgContainerSendColor = bot.msgContainerSendColor
+        userImgColor = bot.userImgColor
+        avatar_url = bot.avatar_url
+        return render_template(
+            "chat.html",
+            bot=bot,
+            initial_context=initial_context,
+            card_bg_color=cardBgColor,
+            msg_container_color=msgContainerColor,
+            msg_container_send_color=msgContainerSendColor,
+            user_img_color=userImgColor,
+            avatar_url=avatar_url,
+        )
+
     @app.route("/submit-initial-config", methods=["GET", "POST"])
     def submit_initial_config():
         if "avatar" in request.files:
