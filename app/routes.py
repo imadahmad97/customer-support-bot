@@ -15,7 +15,9 @@ from .models import User, Chatbot
 from .extensions import db
 from .token import confirm_token, generate_token
 from datetime import datetime
-from .utils import send_email
+from .utils import send_email, upload_file_to_s3
+import os
+from werkzeug.utils import secure_filename
 
 
 def init_routes(app):
@@ -117,8 +119,21 @@ def init_routes(app):
 
     @app.route("/submit-initial-config", methods=["GET", "POST"])
     def submit_initial_config():
-        # Temporarily save the initial config to the session or another temporary store
-        session["initial_config"] = request.form.to_dict()
+        if "avatar" in request.files:
+            file = request.files["avatar"]
+            if file.filename != "":
+                output = upload_file_to_s3(file)
+                filename = secure_filename(file.filename)
+                session["initial_config"] = request.form.to_dict()
+                session["avatar_url"] = output
+                avatar_url = output
+                print(avatar_url)
+
+            else:
+                session["initial_config"] = request.form.to_dict()
+        else:
+            session["initial_config"] = request.form.to_dict()
+
         return jsonify(status="success"), 200
 
     @app.route("/create-new-bot", methods=["GET", "POST"])
@@ -126,6 +141,7 @@ def init_routes(app):
         if request.method == "POST":
             if "initial_config" in session:
                 initial_config = session.pop("initial_config", {})
+                avatar_url = session.pop("avatar_url", {})
                 print(initial_config)
                 detailed_info = request.get_json()
 
@@ -141,6 +157,7 @@ def init_routes(app):
                     msgContainerColor=initial_config["msgContainerColor"],
                     msgContainerSendColor=initial_config["msgContainerSendColor"],
                     userImgColor=initial_config["userImgColor"],
+                    avatar_url=avatar_url,
                 )
                 db.session.add(new_chatbot)
                 db.session.commit()
@@ -160,6 +177,7 @@ def init_routes(app):
         msgContainerColor = bot.msgContainerColor
         msgContainerSendColor = bot.msgContainerSendColor
         userImgColor = bot.userImgColor
+        avatar_url = bot.avatar_url
         return render_template(
             "chat.html",
             bot=bot,
@@ -168,6 +186,7 @@ def init_routes(app):
             msg_container_color=msgContainerColor,
             msg_container_send_color=msgContainerSendColor,
             user_img_color=userImgColor,
+            avatar_url=avatar_url,
         )
 
     @app.route("/get/<int:bot_id>", methods=["POST"])

@@ -13,7 +13,7 @@
 <body>
   
   <div id="createChatbot">
-    <form id="chatbotCreationForm" method="post">
+    <form id="chatbotCreationForm" method="post" enctype="multipart/form-data">
         <!-- Chatbot Name -->
         <div class="form-group">
           <label for="chatbotName">Chatbot Name:</label>
@@ -37,7 +37,13 @@
           <label for="userImgColor">User Image Background Color:</label>
           <input type="color" class="form-control" id="userImgColor" name="userImgColor">
         </div>
-      
+        
+        <!-- Image Upload for Avatar -->
+        <div class="form-group">
+          <label for="avatar">Chatbot Avatar:</label>
+          <input type="file" class="form-control-file" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar(this);">
+          <img id="avatarPreview" src="#" alt="Avatar Preview" style="max-width: 100px; max-height: 100px; display: none;">
+        </div>
         <button type="submit" class="btn btn-primary">Save Changes</button>
       </form>
     </div>
@@ -209,12 +215,14 @@ $(document).ready(function() {
     // Handle the initial form submission via AJAX
     $('#chatbotCreationForm').submit(function(event) {
         event.preventDefault(); // Prevent the normal form submission
-        var formData = $(this).serialize(); // Serialize the form data for sending
+        var formData = new FormData(this);
 
         $.ajax({
             type: "POST",
             url: "/submit-initial-config", // Changed this to a different endpoint for initial config
             data: formData,
+            processData: false,
+            contentType: false,
             success: function(response) {
                 console.log("Initial configuration saved temporarily.");
                 $('#createChatbot').hide();

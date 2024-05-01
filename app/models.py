@@ -32,6 +32,7 @@ class Chatbot(db.Model):
     msgContainerColor = db.Column(db.String(10), default="#FFFFFF")
     msgContainerSendColor = db.Column(db.String(10), default="#FFFFFF")
     userImgColor = db.Column(db.String(10), default="#FFFFFF")
+    avatar_url = db.Column(db.String(255), default="default_image_url")
 
     def __repr__(self):
         return f"<Chatbot {self.id} owned by user {self.user_id}>"
