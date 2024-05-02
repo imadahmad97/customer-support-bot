@@ -34,20 +34,18 @@
         background-color: {{ card_bg_color }};
       }
       .msg_container {
-        background-color: {{ msg_container_color }} !important;
+        background-color: {{ msg_container_color }};
       }
       .msg_container_send {
-        background-color: {{ msg_container_send_color }} !important;
+        background-color: {{ msg_container_send_color }};
       }
       .user_img {
-        background-color: {{ user_img_color }} !important;
+        background-color: {{ card_bg_color }};
       }
     </style>
   </head>
   
   <body>
-    {% include 'header.html' %}
-    {% block content %}{% endblock %}
     <div id="botId" data-id="{{ bot.id }}" style="display:none;"></div>
     <!-- Chat interface -->
     <div class="container-fluid h-100">
@@ -63,11 +61,22 @@
                   />
                 </div>
                 <div class="user_info">
-                  <span> {{ chatbotName }} </span>
+                  <span id="chatbotNameDisplay"> {{ chatbotName }} </span>
                 </div>
               </div>
             </div>
-            <div id="messageFormeight" class="card-body msg_card_body"></div>
+            <div id="messageFormeight" class="card-body msg_card_body">
+                <div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://i.ibb.co/nbjZnHd/chatbot.png" class="rounded-circle user_img_msg"></div><div class="msg_container">
+                  Hello, my name is Clara and I am a customer support bot for Chativate AI Solutions. How can I help you today?
+                  <span class="msg_time"> 
+                  10:20 
+                  </span></div></div>
+                <div class="d-flex justify-content-end mb-4"><div class="msg_container_send">
+          Hello, I am having issues logging in. 
+          <span class="msg_time_send">
+          10:20
+          </span></div><div class="img_cont_msg"><img src="https://iili.io/JgELtiF.png" class="rounded-circle user_img_msg"></div></div>
+                </div>
             <div class="card-footer">
               <form id="messageArea" class="input-group">
                 <input

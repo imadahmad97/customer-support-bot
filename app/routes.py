@@ -120,6 +120,7 @@ def init_routes(app):
     @app.route("/chat_preview")
     def chat_preview():
         bot = Chatbot.query.get_or_404(12)
+        chatbotName = bot.chatbotName
         initial_context = bot.context
         cardBgColor = bot.cardBgColor
         msgContainerColor = bot.msgContainerColor
@@ -127,8 +128,9 @@ def init_routes(app):
         userImgColor = bot.userImgColor
         avatar_url = bot.avatar_url
         return render_template(
-            "chat.html",
+            "chat_preview.html",
             bot=bot,
+            chatbotName=chatbotName,
             initial_context=initial_context,
             card_bg_color=cardBgColor,
             msg_container_color=msgContainerColor,
@@ -193,6 +195,7 @@ def init_routes(app):
         if bot.user_id != current_user.id:
             return redirect(url_for("bots"))
         initial_context = bot.context
+        chatbotName = bot.chatbotName
         cardBgColor = bot.cardBgColor
         msgContainerColor = bot.msgContainerColor
         msgContainerSendColor = bot.msgContainerSendColor
@@ -201,6 +204,7 @@ def init_routes(app):
         return render_template(
             "chat.html",
             bot=bot,
+            chatbotName=chatbotName,
             initial_context=initial_context,
             card_bg_color=cardBgColor,
             msg_container_color=msgContainerColor,
@@ -220,15 +224,17 @@ def init_routes(app):
         if not user_input:
             return jsonify({"error": "No user input provided"}), 400
 
-        try:
-            model = configure_model()
-            prompt = user_input
-            response = model.generate_content(prompt)
-            response_text = response._result.candidates[0].content.parts[0].text
-            return jsonify({"response": response_text})
-        except Exception as e:
-            print("Failed to generate or parse response:", str(e))
-            return jsonify({"error": "Failed to generate response"}), 500
+        while True:
+            try:
+                model = configure_model()
+                prompt = user_input
+                response = model.generate_content(prompt)
+                response_text = response._result.candidates[0].content.parts[0].text
+                return jsonify({"response": response_text})
+            except Exception as e:
+                print("Failed to generate or parse response:", str(e))
+                return jsonify({"error": "Failed to generate response"}), 500
+            break
 
     @app.route("/logout")
     def logout():
