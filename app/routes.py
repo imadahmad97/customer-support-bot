@@ -18,6 +18,7 @@ from datetime import datetime
 from .utils import send_email, upload_file_to_s3
 import os
 from werkzeug.utils import secure_filename
+import json
 
 
 def init_routes(app):
@@ -155,28 +156,49 @@ def init_routes(app):
     @app.route("/create-new-bot", methods=["GET", "POST"])
     def create_new_bot():
         if request.method == "POST":
-            if "initial_config" in session:
-                initial_config = session.pop("initial_config", {})
-                default_avatar_url = "https://i.ibb.co/nbjZnHd/chatbot.png"
-                avatar_url = session.pop("avatar_url", default_avatar_url)
-                print(initial_config)
-                detailed_info = request.get_json()
+            initial_config = session.pop("initial_config", {})
+            default_avatar_url = "https://i.ibb.co/nbjZnHd/chatbot.png"
+            avatar_url = session.pop("avatar_url", default_avatar_url)
 
-                new_chatbot = Chatbot(
-                    user_id=current_user.id,
-                    context=detailed_info["companyContext"]
-                    + " "
-                    + detailed_info["botInfo"]
-                    + " "
-                    + detailed_info["botGoals"],
-                    chatbotName=initial_config["chatbotName"],
-                    cardBgColor=initial_config["cardBgColor"],
-                    avatar_url=avatar_url,
-                )
-                db.session.add(new_chatbot)
-                db.session.commit()
-                print("Created bot")
-                return redirect(url_for("bots"))
+            detailed_info = request.get_json()
+
+            context_data = {
+                "chatbot_name": detailed_info.get(
+                    "chatbot_name", "default_chatbot_name"
+                ),
+                "company_name": detailed_info.get(
+                    "company_name", "default_company_name"
+                ),
+                "company_description": detailed_info.get(
+                    "company_description", "default_company_description"
+                ),
+                "products_services": detailed_info.get(
+                    "products_services", "default_products_services"
+                ),
+                "customer_description": detailed_info.get(
+                    "customer_description", "default_customer_description"
+                ),
+                "greeting_phrase": detailed_info.get(
+                    "greeting_phrase", "default_greeting_phrase"
+                ),
+                "issues": detailed_info.get("issues", []),
+            }
+
+            context_json = json.dumps(context_data)
+
+            new_chatbot = Chatbot(
+                user_id=current_user.id,
+                context=context_json,  # Storing the JSON string in the context field
+                chatbotName=initial_config.get("chatbotName", "ChatBot"),
+                cardBgColor=initial_config.get("cardBgColor", "#FFFFFF"),
+                avatar_url=avatar_url,
+            )
+
+            db.session.add(new_chatbot)
+            db.session.commit()
+            print("Created bot")
+
+            return redirect(url_for("bots"))
 
         return render_template("create_chatbot.html")
 

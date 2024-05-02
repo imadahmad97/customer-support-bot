@@ -53,7 +53,7 @@
     border-radius: 5px;
 }
 
-.btn-primary {
+.btn-tertiary {
     background-color: #20B2AA;
     border-color: #20B2AA;
     padding: 10px 20px;
@@ -68,7 +68,7 @@
     transform: translate(-50%, -50%);
 }
 
-.btn-primary:hover {
+.btn-tertiary:hover {
     background-color: #20B2AA;
 }
 

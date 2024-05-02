@@ -14,7 +14,15 @@
     border-top: none;
     text-align: center; 
 }
-
+.btn-primary {
+    background-color: #20B2AA;
+    border-color: #20B2AA;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 .modal-title {
     color: #333;
     text-align: center;
@@ -49,7 +57,6 @@
 }
 
 textarea.form-control {
-    min-height: 100px;
     width: 100%;
 }
 

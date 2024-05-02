@@ -1,0 +1,22 @@
+{
+    "chatbot_name": "default_chatbot_name",
+    "company_name": "default_company_name",
+    "company_description": "default_company_description",
+    "products_services": "default_products_services",
+    "customer_description": "default_customer_description",
+    "greeting_phrase": "default_greeting_phrase",
+    "issues": [
+        {
+            "problem": "Problem 1",
+            "solution": "Solution to problem 1"
+        },
+        {
+            "problem": "Problem 2",
+            "solution": "Solution to problem 2"
+        },
+        {
+            "problem": "Problem 3",
+            "solution": "Solution to problem 3"
+        }
+    ]
+}
