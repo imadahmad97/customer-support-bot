@@ -9,35 +9,40 @@
       type="text/css"
       href="{{ url_for('static', filename='questions.css') }}"
     />
+    <link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ url_for('static', filename='create_chatbot.css') }}"
+  />
     <script src="{{url_for('static', filename='questions.js')}}"></script>
 <body>
-  
-  <div id="createChatbot">
-    <form id="chatbotCreationForm" method="post" enctype="multipart/form-data">
-        <!-- Chatbot Name -->
-        <div class="form-group">
-          <label for="chatbotName">Chatbot Name:</label>
-          <input type="text" class="form-control" id="chatbotName" name="chatbotName" value="ChatBot">
-        </div>
-      
-        <!-- Color Pickers -->
-        <div class="form-group">
-          <label for="cardBgColor">Card Background Color:</label>
-          <input type="color" class="form-control" id="cardBgColor" name="cardBgColor" value="#FFFFF">
-        </div>
+  {% block content %}
+{% include 'header.html' %}
+<div id="createChatbot">
+  <form id="chatbotCreationForm" method="post" enctype="multipart/form-data">
+      <div class="form-row">  <!-- Flex container -->
+          <div class="form-group flex-item">
+              <label for="chatbotName">Chatbot Name:</label>
+              <input type="text" class="form-control" id="chatbotName" name="chatbotName" value="ChatBot">
+          </div>
         
-        <!-- Image Upload for Avatar -->
-        <div class="form-group">
-          <label for="avatar">Chatbot Avatar:</label>
-          <input type="file" class="form-control-file" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar(this);">
-          <img id="avatarPreview" src="#" alt="Avatar Preview" style="max-width: 100px; max-height: 100px; display: none;">
-        </div>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-      </form>
-      <div class="preview-container">
-        <iframe id="chatPreview" src="/chat_preview" style="width: 100%; height: 500px; border: none;"></iframe>
-    </div>    
-    </div>
+          <div class="form-group flex-item">
+              <label for="cardBgColor">Card Background Color:</label>
+              <input type="color" class="form-control" id="cardBgColor" name="cardBgColor" value="#FFFFF">
+          </div>
+          
+          <div class="form-group flex-item">
+              <label for="avatar">Chatbot Avatar:</label>
+              <input type="file" class="form-control-file" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar(this);">
+              <img id="avatarPreview" src="#" alt="Avatar Preview" style="max-width: 100px; max-height: 100px; display: none;">
+          </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+  <div class="preview-container">
+      <iframe id="chatPreview" src="/chat_preview" style="width: 100%; height: 500px; border: none;"></iframe>
+  </div>    
+</div>
 
     <div id="questionsModal" style="display:none;">
       <body>
@@ -299,3 +304,4 @@ $(document).ready(function() {
 });
     </script>
 </body>      
+{% endblock %}

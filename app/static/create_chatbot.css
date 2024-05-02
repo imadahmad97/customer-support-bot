@@ -1,0 +1,87 @@
+#createChatbot {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+#createChatbot .form-group {
+    margin-bottom: 25px;
+}
+
+#createChatbot label {
+    font-weight: bold;
+    color: #333;
+}
+
+#createChatbot .form-control, #createChatbot .form-control-file {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#createChatbot .form-control {
+    height: 45px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between; /* Adjust spacing as needed */
+}
+
+.flex-item {
+    flex: 1; /* Adjust the flex grow factor as per your design */
+    padding: 10px; /* Optional spacing between items */
+}
+
+#avatarPreview {
+    display: block;
+    margin-top: 15px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+}
+
+#chatPreview {
+    margin-top: 30px;
+    width: 100%;
+    height: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #20B2AA;
+    border-color: #20B2AA;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.btn-primary:hover {
+    background-color: #20B2AA;
+}
+
+.preview-container {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.form-control:focus, .form-control-file:focus {
+    border-color: #66afe9;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

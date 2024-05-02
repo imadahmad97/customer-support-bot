@@ -157,7 +157,8 @@ def init_routes(app):
         if request.method == "POST":
             if "initial_config" in session:
                 initial_config = session.pop("initial_config", {})
-                avatar_url = session.pop("avatar_url", {})
+                default_avatar_url = "https://i.ibb.co/nbjZnHd/chatbot.png"
+                avatar_url = session.pop("avatar_url", default_avatar_url)
                 print(initial_config)
                 detailed_info = request.get_json()
 
