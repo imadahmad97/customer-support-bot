@@ -142,101 +142,96 @@
     </div>
     <script src="{{url_for('static', filename='questions.js')}}"></script>
     <script>
-$(document).ready(function() {
-    // Handle the initial form submission via AJAX
-    $('#chatbotCreationForm').submit(function(event) {
-        event.preventDefault(); // Prevent the normal form submission
-        var formData = new FormData(this);
-
-        $.ajax({
-            type: "POST",
-            url: "/submit-initial-config", // Changed this to a different endpoint for initial config
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                console.log("Initial configuration saved temporarily.");
-                $('#createChatbot').hide();
-                $('#questionsModal').show();
-            },
-            error: function() {
-                console.error("Failed to save initial configuration.");
-            }
-        });
-    });
-
-    // Handle clicking on the 'Next' button which should show the questions modal
-    $('#toQuestions').click(function() {
-        $('#createChatbot').hide();
-        $('#questionsModal').show();
-    });
-
-    // Handle closing the questions modal without submitting the full form
-    $('#closeQuestions').click(function() {
-        $('#questionsModal').hide();
-        $('#createChatbot').show();
-    });
-    $('#submitQuestions').click(function() {
-        var allData = {
-            companyContext: $("#companyContext").val(),
-            botInfo: $("#botInfo").val(),
-            botGoals: $("#botGoals").val(),
-            botLang: $("#botLang").val(),
-        };
-
-        $.ajax({
-            type: "POST",
-            url: "/create-new-bot",
-            contentType: "application/json",
-            data: JSON.stringify(allData),
-            success: function(response) {
-                console.log("Chatbot created successfully.");
-                window.location.href = "/bots";
-            },
-            error: function() {
-                console.error("Failed to create chatbot.");
-            }
-        });
-    });
-    function updatePreview() {
-        let iframe = document.getElementById('chatPreview').contentWindow.document;
-        let chatbotName = $('#chatbotName').val();
-        iframe.querySelector('#chatbotNameDisplay').textContent = chatbotName;
-        iframe.querySelector('.card').style.backgroundColor = $('#cardBgColor').val();
-        
-        const avatarPreviewSrc = $('#avatarPreview').attr('src');
-        if (avatarPreviewSrc) {
-            iframe.querySelector('.user_img').src = avatarPreviewSrc;
-            iframe.querySelector('.user_img_msg').src = avatarPreviewSrc;
-        }
-
-
-    }
-
-    $('#chatbotName, #cardBgColor').change(updatePreview);
-
-    $('#avatar').change(function() {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            $('#avatarPreview').attr('src', e.target.result);
-            updatePreview(); 
-        };
-        reader.readAsDataURL(this.files[0]);
-    });
-
     $(document).ready(function() {
-
-  $('#chatbotName').val('Support Bot');
-  $('#cardBgColor').val('#0F2143');
-
-  // Default avatar
-  let defaultAvatar = 'https://i.ibb.co/nbjZnHd/chatbot.png'; // Path to default avatar image
-  $('#avatarPreview').attr('src', defaultAvatar);
-
-  // Update the preview immediately with default settings
-  updatePreview();
-});
-});
-    </script>
+      $('#chatbotCreationForm').submit(function(event) {
+          event.preventDefault();
+          var formData = new FormData(this);
+          $.ajax({
+              type: "POST",
+              url: "/submit-initial-config",
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function(response) {
+                  console.log("Initial configuration saved temporarily.");
+                  $('#createChatbot').hide();
+                  $('#questionsModal').show();
+              },
+              error: function() {
+                  console.error("Failed to save initial configuration.");
+              }
+          });
+      });
+  
+      $('#toQuestions, #closeQuestions').click(function() {
+          $('#questionsModal').toggle();
+          $('#createChatbot').toggle();
+      });
+  
+      $('#submitQuestions').click(function() {
+          var issuesList = [];
+          $("#issuesTable tbody tr").each(function() {
+              var problem = $(this).find('textarea').first().val();
+              var solution = $(this).find('textarea').last().val();
+              if (problem && solution) {
+                  issuesList.push({ problem: problem, solution: solution });
+              }
+          });
+  
+          var allData = {
+              chatbot_name: $("#chatbotName").val(),
+              company_name: $("#companyName").val(),
+              company_description: $("#companyDescription").val(),
+              products_services: $("#productsServices").val(),
+              customer_description: $("#customerDescription").val(),
+              greeting_phrase: $("#greetingPhrase").val(),
+              issues: issuesList
+          };
+  
+          $.ajax({
+              type: "POST",
+              url: "/create-new-bot",
+              contentType: "application/json",
+              data: JSON.stringify(allData),
+              success: function(response) {
+                  console.log("Chatbot created successfully.");
+                  window.location.href = "/bots";
+              },
+              error: function() {
+                  console.error("Failed to create chatbot.");
+              }
+          });
+      });
+  
+      function updatePreview() {
+          let iframe = document.getElementById('chatPreview').contentWindow.document;
+          let chatbotName = $('#chatbotName').val();
+          iframe.querySelector('#chatbotNameDisplay').textContent = chatbotName;
+          iframe.querySelector('.card').style.backgroundColor = $('#cardBgColor').val();
+          
+          const avatarPreviewSrc = $('#avatarPreview').attr('src');
+          if (avatarPreviewSrc) {
+              iframe.querySelector('.user_img').src = avatarPreviewSrc;
+              iframe.querySelector('.user_img_msg').src = avatarPreviewSrc;
+          }
+      }
+      $('#chatbotName, #cardBgColor').change(updatePreview);
+  
+      $('#avatar').change(function() {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+              $('#avatarPreview').attr('src', e.target.result);
+              updatePreview();
+          };
+          reader.readAsDataURL(this.files[0]);
+      });
+  
+      $('#chatbotName').val('Support Bot');
+      $('#cardBgColor').val('#0F2143');
+      let defaultAvatar = 'https://i.ibb.co/nbjZnHd/chatbot.png';
+      $('#avatarPreview').attr('src', defaultAvatar);
+      updatePreview();
+  });
+  </script>
 </body>      
 {% endblock %}

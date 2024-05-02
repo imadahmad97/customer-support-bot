@@ -188,7 +188,7 @@ def init_routes(app):
 
             new_chatbot = Chatbot(
                 user_id=current_user.id,
-                context=context_json,  # Storing the JSON string in the context field
+                context=context_json,
                 chatbotName=initial_config.get("chatbotName", "ChatBot"),
                 cardBgColor=initial_config.get("cardBgColor", "#FFFFFF"),
                 avatar_url=avatar_url,
@@ -208,15 +208,18 @@ def init_routes(app):
         bot = Chatbot.query.get_or_404(bot_id)
         if bot.user_id != current_user.id:
             return redirect(url_for("bots"))
-        initial_context = bot.context
+        initial_context = json.loads(bot.context)
         chatbotName = bot.chatbotName
         cardBgColor = bot.cardBgColor
         avatar_url = bot.avatar_url
+        print(initial_context)
+        print(initial_context["greeting_phrase"])
         return render_template(
             "chat.html",
             bot=bot,
             chatbotName=chatbotName,
             initial_context=initial_context,
+            greeting_phrase=initial_context["greeting_phrase"],
             card_bg_color=cardBgColor,
             avatar_url=avatar_url,
         )

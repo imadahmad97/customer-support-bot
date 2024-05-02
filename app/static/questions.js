@@ -21,36 +21,4 @@ $(document).ready(function () {
             $("#submitQuestions").show();
         }
     });
-  
-    $("#submitQuestions").click(function () {
-        var issuesList = [];
-        $("#issuesTable tbody tr").each(function () {
-            var problem = $(this).find('textarea').first().val();
-            var solution = $(this).find('textarea').last().val();
-            if (problem && solution) {
-                issuesList.push({ problem: problem, solution: solution });
-            }
-        });
-  
-        var allData = {
-            companyContext: $("#companyContext").val(),
-            botInfo: $("#botInfo").val(),
-            botGoals: $("#botGoals").val(),
-            issues: issuesList,
-            botLang: $("#botLang").val(),
-        };
-  
-        $.ajax({
-            type: "POST",
-            url: "/create-new-bot",
-            contentType: "application/json",
-            data: JSON.stringify(allData),
-            success: function () {
-                console.log("Context updated successfully.");
-                window.location.href = "/bots";
-            },
-            error: function () {
-                console.error("Failed to update context.");
-            }
-        });
-    });})
+    });

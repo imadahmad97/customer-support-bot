@@ -95,13 +95,17 @@
       </div>
     </div>
       <script>
+                  var greetingPhrase = "{{ greeting_phrase }}";
         function sendInitialContext(botId, context) {
           var avatarUrl = "{{ avatar_url }}";
+
+          var initialMessage = `Repeat after me: ${greetingPhrase}.`;
   $.ajax({
+    
       type: "POST",
       url: `/get/${botId}`,
       contentType: "application/json",
-      data: JSON.stringify({ msg: context }),
+      data: JSON.stringify({ msg: initialMessage }),
       success: function (data) {
           var botText = data.response;
           var date = new Date();
