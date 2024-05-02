@@ -16,7 +16,6 @@ from .extensions import db
 from .token import confirm_token, generate_token
 from datetime import datetime
 from .utils import send_email, upload_file_to_s3
-import os
 from werkzeug.utils import secure_filename
 import json
 
@@ -140,11 +139,9 @@ def init_routes(app):
             file = request.files["avatar"]
             if file.filename != "":
                 output = upload_file_to_s3(file)
-                filename = secure_filename(file.filename)
                 session["initial_config"] = request.form.to_dict()
                 session["avatar_url"] = output
                 avatar_url = output
-                print(avatar_url)
 
             else:
                 session["initial_config"] = request.form.to_dict()
@@ -163,8 +160,8 @@ def init_routes(app):
             detailed_info = request.get_json()
 
             context_data = {
-                "chatbot_name": detailed_info.get(
-                    "chatbot_name", "default_chatbot_name"
+                "chatbot_intro_name": detailed_info.get(
+                    "chatbot_intro_name", "default_chatbot_name"
                 ),
                 "company_name": detailed_info.get(
                     "company_name", "default_company_name"
@@ -196,7 +193,6 @@ def init_routes(app):
 
             db.session.add(new_chatbot)
             db.session.commit()
-            print("Created bot")
 
             return redirect(url_for("bots"))
 
@@ -209,17 +205,20 @@ def init_routes(app):
         if bot.user_id != current_user.id:
             return redirect(url_for("bots"))
         initial_context = json.loads(bot.context)
-        chatbotName = bot.chatbotName
+        chatbot_Name = bot.chatbotName
         cardBgColor = bot.cardBgColor
         avatar_url = bot.avatar_url
-        print(initial_context)
-        print(initial_context["greeting_phrase"])
         return render_template(
             "chat.html",
             bot=bot,
-            chatbotName=chatbotName,
-            initial_context=initial_context,
+            chatbot_intro_name=initial_context["chatbot_intro_name"],
+            chatbot_name=chatbot_Name,
+            company_name=initial_context["company_name"],
+            company_description=initial_context["company_description"],
+            products_services=initial_context["products_services"],
+            customer_description=initial_context["customer_description"],
             greeting_phrase=initial_context["greeting_phrase"],
+            issues=initial_context["issues"],
             card_bg_color=cardBgColor,
             avatar_url=avatar_url,
         )

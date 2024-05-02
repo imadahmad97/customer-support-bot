@@ -80,8 +80,8 @@
                 <!-- Question 2 -->
                 <div class="question" id="question2" style="display: none">
                   <div class="form-group">
-                      <label for="chatbotName">Chatbot Name:</label>
-                      <input type="text" class="form-control" id="chatbotName" required>
+                      <label for="chatbot_intro_name">What name do you want your chatbot to introduce itself with?:</label>
+                      <input type="text" class="form-control" id="chatbot_intro_name" required>
                       <label for="greetingPhrase">Greeting Phrase:</label>
                       <textarea class="form-control" id="greetingPhrase" required></textarea>
                       <button type="button" class="btn btn-primary next-btn">Next</button>
@@ -179,13 +179,14 @@
           });
   
           var allData = {
-              chatbot_name: $("#chatbotName").val(),
-              company_name: $("#companyName").val(),
-              company_description: $("#companyDescription").val(),
-              products_services: $("#productsServices").val(),
-              customer_description: $("#customerDescription").val(),
-              greeting_phrase: $("#greetingPhrase").val(),
-              issues: issuesList
+            chatbot_intro_name: $("#chatbot_intro_name").val(),
+            chatbot_name: $("#chatbotName").val(),
+            company_name: $("#companyName").val(),
+            company_description: $("#companyDescription").val(),
+            products_services: $("#productsServices").val(),
+            customer_description: $("#customerDescription").val(),
+            greeting_phrase: $("#greetingPhrase").val(),
+            issues: issuesList
           };
   
           $.ajax({

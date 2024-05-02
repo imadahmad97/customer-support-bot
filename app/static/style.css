@@ -32,6 +32,10 @@ body,html{
 border-radius: 0 0 15px 15px !important;
 	border-top: 0 !important;
 }
+input::placeholder, textarea::placeholder {
+	color: white !important;
+	opacity: 1 !important;
+  }
 .container{
 	align-content: center;
 }
@@ -155,10 +159,11 @@ border-radius: 0 0 15px 15px !important;
 	margin-bottom: auto;
 	margin-right: 10px;
 	border-radius: 25px;
-	background-color: #58cc71;
+	background-color: white;
 	padding: 10px;
 	position: relative;
 }
+
 .msg_time{
 	position: absolute;
 	left: 0;

@@ -11,7 +11,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script>
       const botContext = "{{ bot.context | safe }}";
-  </script>
+    </script>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -44,11 +44,10 @@
       }
     </style>
   </head>
-  
+
   <body>
-    {% include 'header.html' %}
-    {% block content %}{% endblock %}
-    <div id="botId" data-id="{{ bot.id }}" style="display:none;"></div>
+    {% include 'header.html' %} {% block content %}{% endblock %}
+    <div id="botId" data-id="{{ bot.id }}" style="display: none"></div>
     <!-- Chat interface -->
     <div class="container-fluid h-100">
       <div class="row justify-content-center h-100">
@@ -57,13 +56,10 @@
             <div class="card-header msg_head">
               <div class="d-flex bd-highlight">
                 <div class="img_cont">
-                  <img
-                    src="{{ avatar_url }}"
-                    class="rounded-circle user_img"
-                  />
+                  <img src="{{ avatar_url }}" class="rounded-circle user_img" />
                 </div>
                 <div class="user_info">
-                  <span> {{ chatbotName }} </span>
+                  <span> {{ chatbot_name }} </span>
                 </div>
               </div>
             </div>
@@ -94,75 +90,86 @@
         </div>
       </div>
     </div>
-      <script>
-                  var greetingPhrase = "{{ greeting_phrase }}";
-        function sendInitialContext(botId, context) {
-          var avatarUrl = "{{ avatar_url }}";
-
-          var initialMessage = `Repeat after me: ${greetingPhrase}.`;
-  $.ajax({
-    
-      type: "POST",
-      url: `/get/${botId}`,
-      contentType: "application/json",
-      data: JSON.stringify({ msg: initialMessage }),
-      success: function (data) {
-          var botText = data.response;
-          var date = new Date();
-          var str_time = date.getHours() + ":" + date.getMinutes();
-          var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="' + avatarUrl + '" class="rounded-circle user_img_msg"></div><div class="msg_container">' + botText + '<span class="msg_time">' + str_time + "</span></div></div>";
-          $("#messageFormeight").append($.parseHTML(botHtml));
-      },
-      error: function (error) {
-          console.error("Failed to fetch initial context response:", error);
+    <script>
+      function sendInitialContext(botId, botContext) {
+        var avatarUrl = "{{ avatar_url }}";
+        $.ajax({
+          type: "POST",
+          url: `/get/${botId}`,
+          contentType: "application/json",
+          data: JSON.stringify({ msg: botContext }),
+          success: function (data) {
+            var botText = data.response;
+            var date = new Date();
+            var str_time = date.getHours() + ":" + date.getMinutes();
+            var botHtml =
+              '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="' +
+              avatarUrl +
+              '" class="rounded-circle user_img_msg"></div><div class="msg_container">' +
+              botText +
+              '<span class="msg_time">' +
+              str_time +
+              "</span></div></div>";
+            $("#messageFormeight").append($.parseHTML(botHtml));
+          },
+          error: function (error) {
+            console.error("Failed to fetch initial context response:", error);
+          },
+        });
       }
-  });
-}
       $(document).ready(function () {
-
-        var botId = $('#botId').data('id');
-        if(botId && botContext) {
-            sendInitialContext(botId, botContext);
+        var chatbot_intro_name = "{{ chatbot_intro_name }}";
+        var greeting_phrase = "{{ greeting_phrase }}";
+        var chatbot_name = " {{ chatbot_name }}";
+        var company_name = " {{ company_name }}";
+        var company_description = " {{ company_description }}";
+        var products_services = " {{ products_services }}";
+        var customer_description = " {{ customer_description }}";
+        var issues = " {{ issues }}"
+        var botContext = `Repeat after me: ${greeting_phrase} ${chatbot_intro_name} ${company_name} ${company_description} ${products_services} ${customer_description} ${issues}`;
+        var botId = $("#botId").data("id");
+        if (botId && botContext) {
+          sendInitialContext(botId, botContext);
         }
         $("#messageArea").on("submit", function (event) {
-            event.preventDefault();
-            const botId = $('#botId').data('id');  
-            const date = new Date();
-            const hour = date.getHours();
-            const minute = date.getMinutes();
-            const str_time = hour + ":" + minute;
-            const rawText = $("#text").val();
-      
-            var userHtml =
-                '<div class="d-flex justify-content-end mb-4"><div class="msg_container_send">' +
-                rawText +
-                '<span class="msg_time_send">' +
+          event.preventDefault();
+          const botId = $("#botId").data("id");
+          const date = new Date();
+          const hour = date.getHours();
+          const minute = date.getMinutes();
+          const str_time = hour + ":" + minute;
+          const rawText = $("#text").val();
+
+          var userHtml =
+            '<div class="d-flex justify-content-end mb-4"><div class="msg_container_send">' +
+            rawText +
+            '<span class="msg_time_send">' +
+            str_time +
+            '</span></div><div class="img_cont_msg"><img src="https://iili.io/JgELtiF.png" class="rounded-circle user_img_msg"></div></div>';
+          $("#text").val("");
+          $("#messageFormeight").append(userHtml);
+
+          $.ajax({
+            data: JSON.stringify({ msg: rawText }),
+            contentType: "application/json",
+            type: "POST",
+            url: `/get/${botId}`,
+            success: function (data) {
+              var botText = data.response;
+              var botHtml =
+                '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ avatar_url }}" class="rounded-circle user_img_msg"></div><div class="msg_container">' +
+                botText +
+                '<span class="msg_time">' +
                 str_time +
-                '</span></div><div class="img_cont_msg"><img src="https://iili.io/JgELtiF.png" class="rounded-circle user_img_msg"></div></div>';
-            $("#text").val("");
-            $("#messageFormeight").append(userHtml);
-      
-            $.ajax({
-                data: JSON.stringify({ msg: rawText }),
-                contentType: "application/json",
-                type: "POST",
-                url: `/get/${botId}`,
-                success: function (data) {
-                    var botText = data.response;
-                    var botHtml =
-                        '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ avatar_url }}" class="rounded-circle user_img_msg"></div><div class="msg_container">' +
-                        botText +
-                        '<span class="msg_time">' +
-                        str_time +
-                        "</span></div></div>";
-                    $("#messageFormeight").append($.parseHTML(botHtml));
-                },
-                error: function (error) {
-                    console.error("Failed to fetch response:", error);
-                }
-            });
+                "</span></div></div>";
+              $("#messageFormeight").append($.parseHTML(botHtml));
+            },
+            error: function (error) {
+              console.error("Failed to fetch response:", error);
+            },
+          });
         });
       });
-      </script>
+    </script>
   </body>
 </html>
