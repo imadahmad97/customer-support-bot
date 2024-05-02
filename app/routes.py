@@ -15,7 +15,7 @@ from .models import User, Chatbot
 from .extensions import db
 from .token import confirm_token, generate_token
 from datetime import datetime
-from .utils import send_email, upload_file_to_s3
+from .utils import send_email, upload_file_to_gcs
 import json
 
 
@@ -137,15 +137,14 @@ def init_routes(app):
         if "avatar" in request.files:
             file = request.files["avatar"]
             if file.filename != "":
-                output = upload_file_to_s3(file)
-                session["initial_config"] = request.form.to_dict()
-                session["avatar_url"] = output
-                avatar_url = output
-
+                output = upload_file_to_gcs(file)
+                if output is not None:
+                    session["initial_config"] = request.form.to_dict()
+                    session["avatar_url"] = output
+                else:
+                    flash("Failed to upload avatar.", "error")
             else:
                 session["initial_config"] = request.form.to_dict()
-        else:
-            session["initial_config"] = request.form.to_dict()
 
         return jsonify(status="success"), 200
 

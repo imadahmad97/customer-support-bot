@@ -2,6 +2,9 @@ from flask import Flask
 from .config import Config
 from .extensions import db, login_manager, bcrypt
 from .models import User
+from flask_googlestorage import GoogleStorage, Bucket
+from datetime import timedelta
+from werkzeug.datastructures import FileStorage
 
 
 def create_app():
@@ -31,6 +34,15 @@ def create_app():
         MAIL_DEFAULT_SENDER=Config.MAIL_DEFAULT_SENDER,
     )
     bcrypt.init_app(app)
+    files = Bucket(Config.GCP_BUCKET_NAME)
+    storage = GoogleStorage(files)
+
+    app.config.update(
+        GOOGLE_STORAGE_LOCAL_DEST=app.instance_path,
+        GOOGLE_STORAGE_SIGNATURE={"expiration": timedelta(minutes=5)},
+        GOOGLE_STORAGE_FILES_BUCKET=Config.GCP_BUCKET_NAME,
+    )
+    storage.init_app(app)
 
     from .routes import init_routes
 

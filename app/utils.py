@@ -2,6 +2,7 @@ from flask import current_app
 from flask_mail import Message, Mail
 import boto3
 from .config import Config
+from google.cloud import storage
 
 
 mail = Mail()
@@ -18,22 +19,16 @@ def send_email(to, subject, template):
     mail.send(msg)
 
 
-def upload_file_to_s3(file, acl="public-read"):
-    s3 = boto3.client(
-        "s3",
-        aws_access_key_id=Config.AWS_ACCESS_KEY,
-        aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY,
-    )
+def upload_file_to_gcs(file):
+    """Uploads a file to Google Cloud Storage."""
+    client = storage.Client(project=current_app.config["GCLOUD_PROJECT"])
+    bucket = client.bucket(current_app.config["GCP_BUCKET_NAME"])
+    blob = bucket.blob(file.filename)
+
     try:
-        s3.upload_fileobj(
-            file,
-            "chativate-avatars",
-            file.filename,
-            ExtraArgs={"ACL": acl, "ContentType": file.content_type},
-        )
-
+        blob.upload_from_file(file, content_type=file.content_type)
     except Exception as e:
-        print("Something Happened: ", e)
-        return e
+        print(f"Failed to upload file to GCS: {e}")
+        return None
 
-    return Config.S3_DB_URL + file.filename
+    return f"https://storage.googleapis.com/chativateavatars/{file.filename}"
