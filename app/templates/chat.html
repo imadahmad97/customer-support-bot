@@ -125,8 +125,13 @@
         var company_description = " {{ company_description }}";
         var products_services = " {{ products_services }}";
         var customer_description = " {{ customer_description }}";
-        var issues = " {{ issues }}"
-        var botContext = `Repeat after me: ${greeting_phrase} ${chatbot_intro_name} ${company_name} ${company_description} ${products_services} ${customer_description} ${issues}`;
+        var issues = {{ issues | tojson | safe }};
+
+        var issuesText = issues.map(function(issue, index) {
+          return `- Issue ${index + 1}: "${issue.problem}", Solution: "${issue.solution}"`;
+        }).join("\n");
+        var botContext = `You are a customer support chatbot named ${chatbot_intro_name} for ${company_name}, which specializes in ${products_services}. Your primary function is to assist users with their inquiries and solve common issues they might encounter with our services. Here are some issues you should be familiar with:\n${issuesText}\n\nAlways greet users with this phrase: "${greeting_phrase}" and make sure to maintain a supportive and professional tone throughout the conversation. Your responses should be tailored to the needs of ${customer_description}, ensuring they receive accurate and helpful information.`;
+        console.log(botContext)
         var botId = $("#botId").data("id");
         if (botId && botContext) {
           sendInitialContext(botId, botContext);

@@ -16,7 +16,6 @@ from .extensions import db
 from .token import confirm_token, generate_token
 from datetime import datetime
 from .utils import send_email, upload_file_to_s3
-from werkzeug.utils import secure_filename
 import json
 
 
@@ -238,7 +237,12 @@ def init_routes(app):
             try:
                 model = configure_model()
                 prompt = user_input
-                response = model.generate_content(prompt)
+                response = model.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(
+                        max_output_tokens=400
+                    ),
+                )
                 response_text = response._result.candidates[0].content.parts[0].text
                 return jsonify({"response": response_text})
             except Exception as e:

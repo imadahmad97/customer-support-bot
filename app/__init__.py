@@ -2,8 +2,6 @@ from flask import Flask
 from .config import Config
 from .extensions import db, login_manager, bcrypt
 from .models import User
-from flask_mail import Mail
-import os
 
 
 def create_app():

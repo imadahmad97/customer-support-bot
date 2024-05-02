@@ -1,8 +1,6 @@
 from flask import current_app
 from flask_mail import Message, Mail
-import os
-from werkzeug.utils import secure_filename
-import boto3, botocore
+import boto3
 from .config import Config
 
 
