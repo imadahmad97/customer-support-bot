@@ -23,19 +23,7 @@
         <!-- Color Pickers -->
         <div class="form-group">
           <label for="cardBgColor">Card Background Color:</label>
-          <input type="color" class="form-control" id="cardBgColor" name="cardBgColor">
-        </div>
-        <div class="form-group">
-          <label for="msgContainerColor">Message Container Background Color:</label>
-          <input type="color" class="form-control" id="msgContainerColor" name="msgContainerColor">
-        </div>
-        <div class="form-group">
-          <label for="msgContainerSendColor">Message Container Send Background Color:</label>
-          <input type="color" class="form-control" id="msgContainerSendColor" name="msgContainerSendColor">
-        </div>
-        <div class="form-group">
-          <label for="userImgColor">User Image Background Color:</label>
-          <input type="color" class="form-control" id="userImgColor" name="userImgColor">
+          <input type="color" class="form-control" id="cardBgColor" name="cardBgColor" value="#FFFFF">
         </div>
         
         <!-- Image Upload for Avatar -->
@@ -275,19 +263,17 @@ $(document).ready(function() {
         let chatbotName = $('#chatbotName').val();
         iframe.querySelector('#chatbotNameDisplay').textContent = chatbotName;
         iframe.querySelector('.card').style.backgroundColor = $('#cardBgColor').val();
-        iframe.querySelector('.msg_container').style.backgroundColor = $('#msgContainerColor').val();
-        iframe.querySelector('.msg_container_send').style.backgroundColor = $('#msgContainerSendColor').val();
-        iframe.querySelector('.user_img').style.backgroundColor = $('#userImgColor').val();
         
         const avatarPreviewSrc = $('#avatarPreview').attr('src');
         if (avatarPreviewSrc) {
             iframe.querySelector('.user_img').src = avatarPreviewSrc;
+            iframe.querySelector('.user_img_msg').src = avatarPreviewSrc;
         }
 
 
     }
 
-    $('#chatbotName, #cardBgColor, #msgContainerColor, #msgContainerSendColor, #userImgColor').change(updatePreview);
+    $('#chatbotName, #cardBgColor').change(updatePreview);
 
     $('#avatar').change(function() {
         let reader = new FileReader();
@@ -297,6 +283,19 @@ $(document).ready(function() {
         };
         reader.readAsDataURL(this.files[0]);
     });
+
+    $(document).ready(function() {
+
+  $('#chatbotName').val('Support Bot');
+  $('#cardBgColor').val('#0F2143');
+
+  // Default avatar
+  let defaultAvatar = 'https://i.ibb.co/nbjZnHd/chatbot.png'; // Path to default avatar image
+  $('#avatarPreview').attr('src', defaultAvatar);
+
+  // Update the preview immediately with default settings
+  updatePreview();
+});
 });
     </script>
 </body>      

@@ -29,9 +29,6 @@ class Chatbot(db.Model):
     context = db.Column(db.String, default="default context")
     chatbotName = db.Column(db.String(255), default="ChatBot")
     cardBgColor = db.Column(db.String(10), default="#FFFFFF")
-    msgContainerColor = db.Column(db.String(10), default="#FFFFFF")
-    msgContainerSendColor = db.Column(db.String(10), default="#FFFFFF")
-    userImgColor = db.Column(db.String(10), default="#FFFFFF")
     avatar_url = db.Column(db.String(255), default="default_image_url")
 
     def __repr__(self):

@@ -123,9 +123,6 @@ def init_routes(app):
         chatbotName = bot.chatbotName
         initial_context = bot.context
         cardBgColor = bot.cardBgColor
-        msgContainerColor = bot.msgContainerColor
-        msgContainerSendColor = bot.msgContainerSendColor
-        userImgColor = bot.userImgColor
         avatar_url = bot.avatar_url
         return render_template(
             "chat_preview.html",
@@ -133,9 +130,6 @@ def init_routes(app):
             chatbotName=chatbotName,
             initial_context=initial_context,
             card_bg_color=cardBgColor,
-            msg_container_color=msgContainerColor,
-            msg_container_send_color=msgContainerSendColor,
-            user_img_color=userImgColor,
             avatar_url=avatar_url,
         )
 
@@ -176,9 +170,6 @@ def init_routes(app):
                     + detailed_info["botGoals"],
                     chatbotName=initial_config["chatbotName"],
                     cardBgColor=initial_config["cardBgColor"],
-                    msgContainerColor=initial_config["msgContainerColor"],
-                    msgContainerSendColor=initial_config["msgContainerSendColor"],
-                    userImgColor=initial_config["userImgColor"],
                     avatar_url=avatar_url,
                 )
                 db.session.add(new_chatbot)
@@ -197,9 +188,6 @@ def init_routes(app):
         initial_context = bot.context
         chatbotName = bot.chatbotName
         cardBgColor = bot.cardBgColor
-        msgContainerColor = bot.msgContainerColor
-        msgContainerSendColor = bot.msgContainerSendColor
-        userImgColor = bot.userImgColor
         avatar_url = bot.avatar_url
         return render_template(
             "chat.html",
@@ -207,9 +195,6 @@ def init_routes(app):
             chatbotName=chatbotName,
             initial_context=initial_context,
             card_bg_color=cardBgColor,
-            msg_container_color=msgContainerColor,
-            msg_container_send_color=msgContainerSendColor,
-            user_img_color=userImgColor,
             avatar_url=avatar_url,
         )
 
