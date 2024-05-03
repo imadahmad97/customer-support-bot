@@ -4,7 +4,6 @@ from .extensions import db, login_manager, bcrypt
 from .models import User
 from flask_googlestorage import GoogleStorage, Bucket
 from datetime import timedelta
-from werkzeug.datastructures import FileStorage
 
 
 def create_app():

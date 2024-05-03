@@ -28,6 +28,14 @@ def init_routes(app):
     def post_registration():
         return render_template("post_registration.html")
 
+    @app.route("/liveness_check")
+    def liveness_check():
+        return "OK", 200
+
+    @app.route("/readiness_check")
+    def readiness_check():
+        return "OK", 201
+
     @app.route("/confirm/<token>")
     def confirm_email(token):
         email = confirm_token(token)

@@ -1,7 +1,5 @@
 from flask import current_app
 from flask_mail import Message, Mail
-import boto3
-from .config import Config
 from google.cloud import storage
 
 
