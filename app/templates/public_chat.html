@@ -129,7 +129,7 @@
         var issuesText = issues.map(function(issue, index) {
           return `- Issue ${index + 1}: "${issue.problem}", Solution: "${issue.solution}"`;
         }).join("\n");
-        var botContext = `You are a customer support chatbot named ${chatbot_intro_name} for ${company_name}, which specializes in ${products_services}. Your primary function is to assist users with their inquiries and solve common issues they might encounter with our services. Here are some issues you should be familiar with:\n${issuesText}\n\nAlways greet users with this phrase: "${greeting_phrase}" and make sure to maintain a supportive and professional tone throughout the conversation. Your responses should be tailored to the needs of ${customer_description}, ensuring they receive accurate and helpful information.`;
+        var botContext = `You are a customer support chatbot named ${chatbot_intro_name} for ${company_name}, which specializes in ${products_services}. Your primary function is to assist users with their inquiries and solve common issues they might encounter with our services. Here are some issues you should be familiar with:\n${issuesText}\n\nAlways greet users with this phrase: "${greeting_phrase}" and make sure to maintain a supportive and professional tone throughout the conversation. Your responses should be tailored to the needs of ${customer_description}, ensuring they receive accurate and helpful information. This first message is from us to you, now you can reply to the user with the greeting message only and see what they ask for help with. Assume the users are only here for help with ${company_name}, and do not offer them any other information to help other than what you've been given. If you don't know the answer to any requests, just tell them to contact our support team.`;
         console.log(botContext)
         var botId = $("#botId").data("id");
         if (botId && botContext) {
@@ -137,16 +137,16 @@
         }
         $("#messageArea").on("submit", function (event) {
           event.preventDefault();
+          var secondContext = `You are a customer support chatbot named ${chatbot_intro_name} for ${company_name}, which specializes in ${products_services}. Your primary function is to assist users with their inquiries and solve common issues they might encounter with our services. Here are some issues you should be familiar with:\n${issuesText}\n\n Your responses should be tailored to the needs of ${customer_description}, ensuring they receive accurate and helpful information. Assume the users are only here for help with ${company_name}, and do not offer them any other information to help other than what you've been given. If you don't know the answer to any requests, just tell them to contact our support team. Now that you have all of this info, here is the users query: `;
           const botId = $("#botId").data("id");
           const date = new Date();
           const hour = date.getHours();
           const minute = date.getMinutes();
           const str_time = hour + ":" + minute;
           const rawText = $("#text").val();
-
           var userHtml =
             '<div class="d-flex justify-content-end mb-4"><div class="msg_container_send">' +
-            rawText +
+             rawText+
             '<span class="msg_time_send">' +
             str_time +
             '</span></div><div class="img_cont_msg"><img src="https://iili.io/JgELtiF.png" class="rounded-circle user_img_msg"></div></div>';
@@ -154,7 +154,7 @@
           $("#messageFormeight").append(userHtml);
 
           $.ajax({
-            data: JSON.stringify({ msg: rawText }),
+            data: JSON.stringify({ msg: secondContext+rawText }),
             contentType: "application/json",
             type: "POST",
             url: `/get/${botId}`,
