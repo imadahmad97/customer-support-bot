@@ -40,22 +40,31 @@ def init_routes(app):
     def confirm_email(token):
         email = confirm_token(token)
         if not email:
-            flash("The confirmation link is invalid or has expired.", "danger")
+            print("The confirmation link is invalid or has expired.", "danger")
             return redirect(url_for("login_register"))
 
         user = User.query.filter_by(email=email).first()
         if user is None:
-            flash("No account found for this email.", "danger")
+            print("No account found for this email.", "danger")
             return redirect(url_for("login_register"))
 
         if user.is_confirmed:
-            flash("Account already confirmed.", "success")
+            print("Account already confirmed.", "success")
             return redirect(url_for("login_register"))
 
+        print("Is confirmed before:", user.is_confirmed)
         user.is_confirmed = True
         user.confirmed_on = datetime.now()
-        db.session.commit()
-        flash("You have confirmed your account. Thanks!", "success")
+        print("Is confirmed after:", user.is_confirmed)
+
+        try:
+            db.session.commit()
+            print("You have confirmed your account. Thanks!", "success")
+        except Exception as e:
+            db.session.rollback()
+            print(str(e), "error")
+            return redirect(url_for("login_register"))
+
         return redirect(url_for("login_register"))
 
     @app.route("/login", methods=["GET", "POST"])
@@ -98,11 +107,7 @@ def init_routes(app):
                 username = request.form["username"]
                 password = request.form["password"]
                 user = User.query.filter_by(username=username).first()
-                if (
-                    user
-                    and check_password_hash(user.password_hash, password)
-                    and user.is_confirmed
-                ):
+                if user and check_password_hash(user.password_hash, password):
                     login_user(user)
                     return redirect(url_for("bots"))
                 elif user and check_password_hash(user.password_hash, password):
