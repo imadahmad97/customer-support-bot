@@ -104,6 +104,31 @@ def init_routes(app):
                     return redirect(url_for("login_register"))
         return render_template("login.html")
 
+    @app.route("/public-chat/<int:bot_id>")
+    def public_chat(bot_id):
+        bot = Chatbot.query.get_or_404(bot_id)
+        bot = Chatbot.query.get_or_404(bot_id)
+        if bot.user_id != current_user.id:
+            return redirect(url_for("bots"))
+        initial_context = json.loads(bot.context)
+        chatbot_Name = bot.chatbotName
+        cardBgColor = bot.cardBgColor
+        avatar_url = bot.avatar_url
+        return render_template(
+            "public_chat.html",
+            bot=bot,
+            chatbot_intro_name=initial_context["chatbot_intro_name"],
+            chatbot_name=chatbot_Name,
+            company_name=initial_context["company_name"],
+            company_description=initial_context["company_description"],
+            products_services=initial_context["products_services"],
+            customer_description=initial_context["customer_description"],
+            greeting_phrase=initial_context["greeting_phrase"],
+            issues=initial_context["issues"],
+            card_bg_color=cardBgColor,
+            avatar_url=avatar_url,
+        )
+
     @app.route("/bots")
     @login_required
     def bots():

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script>
+      const botContext = "{{ bot.context | safe }}";
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <style>
+      .card {
+        background-color: {{ card_bg_color }} !important;
+      }
+      .msg_container {
+        background-color: white !important;
+      }
+      .msg_container_send {
+        background-color: white !important;
+      }
+      .user_img {
+        background-color: #0F2143 !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="botId" data-id="{{ bot.id }}" style="display: none"></div>
+    <!-- Chat interface -->
+    <div class="container-fluid h-100">
+      <div class="row justify-content-center h-100">
+        <div class="col-md-8 col-xl-6 chat">
+          <div class="card">
+            <div class="card-header msg_head">
+              <div class="d-flex bd-highlight">
+                <div class="img_cont">
+                  <img src="{{ avatar_url }}" class="rounded-circle user_img" />
+                </div>
+                <div class="user_info">
+                  <span> {{ chatbot_name }} </span>
+                </div>
+              </div>
+            </div>
+            <div id="messageFormeight" class="card-body msg_card_body"></div>
+            <div class="card-footer">
+              <form id="messageArea" class="input-group">
+                <input
+                  type="text"
+                  id="text"
+                  name="msg"
+                  placeholder="Type your message..."
+                  autocomplete="off"
+                  class="form-control type_msg"
+                  required
+                />
+                <div class="input-group-append">
+                  <button
+                    type="submit"
+                    id="send"
+                    class="input-group-text send_btn"
+                  >
+                    <i class="fas fa-location-arrow"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function sendInitialContext(botId, botContext) {
+        var avatarUrl = "{{ avatar_url }}";
+        $.ajax({
+          type: "POST",
+          url: `/get/${botId}`,
+          contentType: "application/json",
+          data: JSON.stringify({ msg: botContext }),
+          success: function (data) {
+            var botText = data.response;
+            var date = new Date();
+            var str_time = date.getHours() + ":" + date.getMinutes();
+            var botHtml =
+              '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="' +
+              avatarUrl +
+              '" class="rounded-circle user_img_msg"></div><div class="msg_container">' +
+              botText +
+              '<span class="msg_time">' +
+              str_time +
+              "</span></div></div>";
+            $("#messageFormeight").append($.parseHTML(botHtml));
+          },
+          error: function (error) {
+            console.error("Failed to fetch initial context response:", error);
+          },
+        });
+      }
+      $(document).ready(function () {
+        var chatbot_intro_name = "{{ chatbot_intro_name }}";
+        var greeting_phrase = "{{ greeting_phrase }}";
+        var chatbot_name = " {{ chatbot_name }}";
+        var company_name = " {{ company_name }}";
+        var company_description = " {{ company_description }}";
+        var products_services = " {{ products_services }}";
+        var customer_description = " {{ customer_description }}";
+        var issues = {{ issues | tojson | safe }};
+
+        var issuesText = issues.map(function(issue, index) {
+          return `- Issue ${index + 1}: "${issue.problem}", Solution: "${issue.solution}"`;
+        }).join("\n");
+        var botContext = `You are a customer support chatbot named ${chatbot_intro_name} for ${company_name}, which specializes in ${products_services}. Your primary function is to assist users with their inquiries and solve common issues they might encounter with our services. Here are some issues you should be familiar with:\n${issuesText}\n\nAlways greet users with this phrase: "${greeting_phrase}" and make sure to maintain a supportive and professional tone throughout the conversation. Your responses should be tailored to the needs of ${customer_description}, ensuring they receive accurate and helpful information.`;
+        console.log(botContext)
+        var botId = $("#botId").data("id");
+        if (botId && botContext) {
+          sendInitialContext(botId, botContext);
+        }
+        $("#messageArea").on("submit", function (event) {
+          event.preventDefault();
+          const botId = $("#botId").data("id");
+          const date = new Date();
+          const hour = date.getHours();
+          const minute = date.getMinutes();
+          const str_time = hour + ":" + minute;
+          const rawText = $("#text").val();
+
+          var userHtml =
+            '<div class="d-flex justify-content-end mb-4"><div class="msg_container_send">' +
+            rawText +
+            '<span class="msg_time_send">' +
+            str_time +
+            '</span></div><div class="img_cont_msg"><img src="https://iili.io/JgELtiF.png" class="rounded-circle user_img_msg"></div></div>';
+          $("#text").val("");
+          $("#messageFormeight").append(userHtml);
+
+          $.ajax({
+            data: JSON.stringify({ msg: rawText }),
+            contentType: "application/json",
+            type: "POST",
+            url: `/get/${botId}`,
+            success: function (data) {
+              var botText = data.response;
+              var botHtml =
+                '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ avatar_url }}" class="rounded-circle user_img_msg"></div><div class="msg_container">' +
+                botText +
+                '<span class="msg_time">' +
+                str_time +
+                "</span></div></div>";
+              $("#messageFormeight").append($.parseHTML(botHtml));
+            },
+            error: function (error) {
+              console.error("Failed to fetch response:", error);
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
