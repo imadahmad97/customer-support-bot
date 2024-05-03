@@ -1,19 +1,14 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://i.ibb.co/8BgMDYs/181774572-3.png" alt="Logo" height=100>
+    <img src="https://i.ibb.co/8BgMDYs/181774572-3.png" alt="Logo">
   </a>
-
-  <h3 align="center">Customer Support Bot</h3>
+<br><br>
 
   <p align="center">
-    A web app that allows anyone to get customized customer support AI chatbots for their business in minutes!
+    <h1>A web app that allows anyone to get customized customer support AI chatbots for their business in minutes!</h1>
     <br />
-    <a href="https://advance-elixir-382004.uw.r.appspot.com"><strong>Try Now!</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/imadahmad97/customer-support-bot/issues/new">Report Bug</a>
-
+    <H1><a href="https://advance-elixir-382004.uw.r.appspot.com">Click to try now!</a></H1>
   </p>
 </div>
 
