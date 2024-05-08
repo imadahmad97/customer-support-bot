@@ -21,7 +21,7 @@
   <form id="chatbotCreationForm" method="post" enctype="multipart/form-data">
       <div class="form-row">  <!-- Flex container -->
           <div class="form-group flex-item">
-              <label for="chatbotName">Chatbot Name:</label>
+              <label for="chatbotName">Chatbot/Company Name:</label>
               <input type="text" class="form-control" id="chatbotName" name="chatbotName" value="ChatBot">
           </div>
         
@@ -36,12 +36,14 @@
               <img id="avatarPreview" src="#" alt="Avatar Preview" style="max-width: 100px; max-height: 100px; display: none;">
           </div>
       </div>
-      <button type="submit" class="btn btn-tertiary">Save Changes</button>
-  </form>
-  <div class="preview-container">
+
+
       <iframe id="chatPreview" src="/chat_preview" style="width: 100%; height: 500px; border: none;"></iframe>
-  </div>    
+
+      <button type="submit" class="btn button-3">Save Changes</button>
+    </form>
 </div>
+
 
     <div id="questionsModal" style="display:none;">
       <body>

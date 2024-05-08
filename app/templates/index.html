@@ -13,10 +13,12 @@
 
 <body class="is-boxed has-animations">
     <div class="body-wrap">
-        <header class="site-header">
+        <header class="site-header" style=" 
+            padding-bottom: 0px; 
+            padding-top: 0px;">
             <div class="container">
                 <div class="site-header-inner">
-                    <div class="brand header-brand"><img src="https://i.ibb.co/MR17Npg/181774572-5.png" width="200">
+                    <div class="brand header-brand"><img src="{{ url_for('static', filename='images/logo.svg') }}" width="250">
                         <h1 class="m-0">
                         </h1>
                     </div>
@@ -25,9 +27,8 @@
         </header>
         
 
-        <main>
 
-            <section class="hero">
+            <section class="hero" style="padding-top: 0;">
                 <div class="container">
                     <div class="hero-inner">
 						<div class="hero-copy">
@@ -92,8 +93,6 @@
             </section>
 
             
-
-        </main>
 
         
     </div>

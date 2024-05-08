@@ -8,16 +8,14 @@ runtime_config:
 manual_scaling:
   instances: 1
 resources:
-  cpu: 4
-  memory_gb: 6.0
-  disk_size_gb: 20
+  cpu: 1
+  memory_gb: 2.0
+  disk_size_gb: 10
 
 handlers:
-  # Serve static files directly from the /static directory
   - url: /static
     static_dir: app/static
 
-  # Serve all other requests via the application
   - url: /.*
     script: auto
 

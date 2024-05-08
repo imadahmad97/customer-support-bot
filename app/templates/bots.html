@@ -36,8 +36,8 @@
                 <td>{{ bot.id }}</td>
                 <td>{{ bot.chatbotName }}</td>
                 <td>
-                    <a href="{{ url_for('chat_with_bot', bot_id=bot.id) }}" class="btn btn-primary">Test Chat</a>
-                    <button class="btn btn-primary" onclick="copyToClipboard(this)" data-link="{{ url_for('public_chat', bot_id=bot.id, _external=True) }}">Copy Public Link</button>
+                    <a href="{{ url_for('chat_with_bot', bot_id=bot.id) }}" class="btn button-3">Test Chat</a>
+                    <button class="btn button-3" onclick="copyToClipboard(this)" data-link="{{ url_for('public_chat', bot_id=bot.id, _external=True) }}">Copy Public Link</button>
                 </td>
             </tr>
             {% endfor %}
