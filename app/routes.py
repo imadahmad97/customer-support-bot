@@ -17,12 +17,44 @@ from .token import confirm_token, generate_token
 from datetime import datetime
 from .utils import send_email, upload_file_to_gcs
 import json
+from flask_dance.contrib.google import make_google_blueprint
 
 
 def init_routes(app):
+
+    google_bp = make_google_blueprint(
+        client_id=app.config["GOOGLE_CLIENT_ID"],
+        client_secret=app.config["GOOGLE_CLIENT_SECRET"],
+        redirect_to="google_login_callback",
+        scope=[
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email",
+            "openid",
+        ],
+    )
+    app.register_blueprint(google_bp, url_prefix="/login")
+
     @app.route("/")
     def land():
         return render_template("index.html")
+
+    @app.route("/login/google_login_callback")
+    def google_login_callback():
+        if not google.authorized:
+            return "Access Denied", 403
+
+        resp = google.get("/oauth2/v2/userinfo")
+        if resp.ok:
+            user_info = resp.json()
+            user = User.query.filter_by(email=user_info["email"]).first()
+            if not user:
+                user = User(email=user_info["email"])
+                db.session.add(user)
+                db.session.commit()
+
+            login_user(user)
+            return redirect(url_for("bots"))
+        return "Failed to fetch user info", 500
 
     @app.route("/confirm_email")
     def post_registration():
@@ -71,51 +103,60 @@ def init_routes(app):
     def login_register():
         if request.method == "POST":
             action = request.form.get("action")
-            if action == "Register":
-                username = request.form["username"]
-                password = request.form["password"]
-                email = request.form["email"]
+            if action == "Login with Google":
+                return redirect(
+                    url_for("google.login")
+                )  # Redirect to Google's OAuth page
+        return render_template("test_oauth.html")
 
-                existing_user = User.query.filter_by(username=username).first()
-                if existing_user:
-                    flash("Username already exists. Please choose a different one.")
-                    return redirect(url_for("login_register"))
+    # def login_register():
+    #     if request.method == "POST":
+    #         action = request.form.get("action")
+    #         if action == "Register":
+    #             username = request.form["username"]
+    #             password = request.form["password"]
+    #             email = request.form["email"]
 
-                new_user = User(
-                    username=username,
-                    password_hash=generate_password_hash(password),
-                    email=email,
-                    created_on=datetime.now(),
-                    is_admin=True,
-                    is_confirmed=False,
-                    confirmed_on=None,
-                )
+    #             existing_user = User.query.filter_by(username=username).first()
+    #             if existing_user:
+    #                 flash("Username already exists. Please choose a different one.")
+    #                 return redirect(url_for("login_register"))
 
-                db.session.add(new_user)
-                db.session.commit()
+    #             new_user = User(
+    #                 username=username,
+    #                 password_hash=generate_password_hash(password),
+    #                 email=email,
+    #                 created_on=datetime.now(),
+    #                 is_admin=True,
+    #                 is_confirmed=False,
+    #                 confirmed_on=None,
+    #             )
 
-                token = generate_token(new_user.email)
-                confirm_url = url_for("confirm_email", token=token, _external=True)
-                html = render_template("confirm_email.html", confirm_url=confirm_url)
-                subject = "Please confirm your email"
-                send_email(new_user.email, subject, html)
+    #             db.session.add(new_user)
+    #             db.session.commit()
 
-                flash("Registration successful! Please log in.")
-                return redirect(url_for("post_registration"))
+    #             token = generate_token(new_user.email)
+    #             confirm_url = url_for("confirm_email", token=token, _external=True)
+    #             html = render_template("confirm_email.html", confirm_url=confirm_url)
+    #             subject = "Please confirm your email"
+    #             send_email(new_user.email, subject, html)
 
-            elif action == "Login":
-                username = request.form["username"]
-                password = request.form["password"]
-                user = User.query.filter_by(username=username).first()
-                if user and check_password_hash(user.password_hash, password):
-                    login_user(user)
-                    return redirect(url_for("bots"))
-                elif user and check_password_hash(user.password_hash, password):
-                    flash("Please verify your email")
-                else:
-                    flash("Invalid username or password. Please try again.")
-                    return redirect(url_for("login_register"))
-        return render_template("login.html")
+    #             flash("Registration successful! Please log in.")
+    #             return redirect(url_for("post_registration"))
+
+    #         elif action == "Login":
+    #             username = request.form["username"]
+    #             password = request.form["password"]
+    #             user = User.query.filter_by(username=username).first()
+    #             if user and check_password_hash(user.password_hash, password):
+    #                 login_user(user)
+    #                 return redirect(url_for("bots"))
+    #             elif user and check_password_hash(user.password_hash, password):
+    #                 flash("Please verify your email")
+    #             else:
+    #                 flash("Invalid username or password. Please try again.")
+    #                 return redirect(url_for("login_register"))
+    #     return render_template("login.html")
 
     @app.route("/public-chat/<int:bot_id>")
     def public_chat(bot_id):
