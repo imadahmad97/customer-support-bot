@@ -17,7 +17,7 @@ from .token import confirm_token, generate_token
 from datetime import datetime
 from .utils import send_email, upload_file_to_gcs
 import json
-from flask_dance.contrib.google import make_google_blueprint
+from flask_dance.contrib.google import make_google_blueprint, google
 
 
 def init_routes(app):
@@ -102,6 +102,9 @@ def init_routes(app):
     @app.route("/login", methods=["GET", "POST"])
     def login_register():
         if request.method == "POST":
+            redirect_uri = url_for("google_login_callback", _external=True)
+            print(f"Generated redirect URI: {redirect_uri}")
+            print("login request is post")
             action = request.form.get("action")
             if action == "Login with Google":
                 return redirect(
