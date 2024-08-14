@@ -38,7 +38,7 @@ def init_routes(app):
     def land():
         return render_template("index.html")
 
-    @app.route("/login/google/authorized")
+    @app.route("/login/google_login_callback")
     def google_login_callback():
         if not google.authorized:
             return "Access Denied", 403
@@ -48,7 +48,17 @@ def init_routes(app):
             user_info = resp.json()
             user = User.query.filter_by(email=user_info["email"]).first()
             if not user:
-                user = User(email=user_info["email"])
+                email = user_info["email"]
+                username = email.split("@")[0]
+                user = User(
+                    username=username,
+                    password_hash="google_login_account",
+                    email=user_info["email"],
+                    created_on=datetime.now(),
+                    is_admin=True,
+                    is_confirmed=True,
+                    confirmed_on=datetime.now(),
+                )
                 db.session.add(user)
                 db.session.commit()
 
