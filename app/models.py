@@ -6,7 +6,7 @@ import random
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False)
+    username = db.Column(db.String, nullable=True)
     password_hash = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     created_on = db.Column(db.DateTime, nullable=False)

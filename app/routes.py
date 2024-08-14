@@ -38,7 +38,7 @@ def init_routes(app):
     def land():
         return render_template("index.html")
 
-    @app.route("/login/google_login_callback")
+    @app.route("/login/google/authorized")
     def google_login_callback():
         if not google.authorized:
             return "Access Denied", 403
