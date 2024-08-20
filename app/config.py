@@ -21,3 +21,4 @@ class Config:
     MAIL_USE_TLS = os.getenv("MAIL_USE_TLS")
     GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
     GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+    PREFERRED_URL_SCHEME = "https"

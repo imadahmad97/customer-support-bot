@@ -28,7 +28,7 @@
       <input type="password" id="password" name="password" placeholder="Password"/>
       <a href="#">Forgot your password?</a>
       <input type="submit" name="action" value="Login">
-      <input type="submit" name="action" value="Login with Google" class="login-google-button">
+      <a href="{{ url_for('google.login') }}" class="login-google-button">Login with Google</a>
       </form>
   </div>
   <div class="overlay-container">
