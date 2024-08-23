@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Subscribe</title>
+  </head>
+  <body>
+    <h1>Subscribe to Our Service</h1>
+    <form action="{{ url_for('create_checkout_session') }}" method="POST">
+      <button type="submit">Subscribe Now</button>
+    </form>
+  </body>
+</html>

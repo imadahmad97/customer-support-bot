@@ -1,6 +1,9 @@
 from flask import current_app
 from flask_mail import Message, Mail
 from google.cloud import storage
+from functools import wraps
+from flask import redirect, url_for
+from .models import User
 
 
 mail = Mail()
@@ -30,3 +33,13 @@ def upload_file_to_gcs(file):
         return None
 
     return f"https://storage.googleapis.com/chativateavatars/{file.filename}"
+
+
+def subscription_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not User.is_subscribed:
+            return redirect(url_for("subscribe"))
+        return f(*args, **kwargs)
+
+    return decorated_function

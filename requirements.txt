@@ -19,3 +19,4 @@ jsonify==0.5
 python-dotenv==1.0.1
 PyMySQL==1.1.0
 Flask-Dance==7.1.0
+stripe==10.8.0

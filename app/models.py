@@ -13,6 +13,8 @@ class User(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
+    is_subscribed = db.Column(db.Boolean, default=False)
+    stripe_customer_id = db.Column(db.String(255), unique=True, nullable=True)
 
     def get_id(self):
         return self.id

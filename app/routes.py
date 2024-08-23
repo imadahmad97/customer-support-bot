@@ -18,6 +18,7 @@ from datetime import datetime
 from .utils import send_email, upload_file_to_gcs
 import json
 from flask_dance.contrib.google import make_google_blueprint, google
+import stripe
 
 
 def init_routes(app):
@@ -339,3 +340,59 @@ def init_routes(app):
     def logout():
         logout_user()
         return redirect(url_for("login_register"))
+
+    @app.route("/create-checkout-session", methods=["POST"])
+    def create_checkout_session():
+        stripe.api_key = app.config["STRIPE_SECRET_KEY"]
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[
+                {
+                    "price": "price_1PqnDWKEwAs1n38cT4w37bp7",
+                    "quantity": 1,
+                },
+            ],
+            mode="subscription",
+            success_url=url_for("subscription_success", _external=True),
+            cancel_url=url_for("subscription_cancel", _external=True),
+        )
+        return redirect(session.url, code=303)
+
+    def handle_successful_subscription(session):
+        customer_id = session["customer"]
+        # Fetch the user associated with this Stripe customer ID and update their subscription status
+        user = User.query.filter_by(stripe_customer_id=customer_id).first()
+        if user:
+            user.is_subscribed = True
+            db.session.commit()
+
+    @app.route("/webhook", methods=["POST"])
+    def stripe_webhook():
+        stripe.api_key = app.config["STRIPE_SECRET_KEY"]
+        payload = request.get_data(as_text=True)
+        sig_header = request.headers.get("Stripe-Signature")
+        event = None
+
+        try:
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, "your_webhook_secret"
+            )
+        except ValueError as e:
+            return "", 400
+        except stripe.error.SignatureVerificationError as e:
+            return "", 400
+
+        if event["type"] == "checkout.session.completed":
+            session = event["data"]["object"]
+            # Update the user’s subscription status in your database
+            handle_successful_subscription(session)  # Implement this function
+
+        return "", 200
+
+    @app.route("/subscription-success")
+    def subscription_success():
+        return render_template("subscription_success.html")
+
+    @app.route("/subscription-cancel")
+    def subscription_cancel():
+        return render_template("subscription_cancel.html")
