@@ -343,6 +343,7 @@ def init_routes(app):
 
     @app.route("/create-checkout-session", methods=["POST"])
     def create_checkout_session():
+        print("Creating checkout session.")
         stripe.api_key = app.config["STRIPE_SECRET_KEY"]
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
@@ -355,44 +356,66 @@ def init_routes(app):
             mode="subscription",
             success_url=url_for("subscription_success", _external=True),
             cancel_url=url_for("subscription_cancel", _external=True),
+            subscription_data={
+                "trial_settings": {
+                    "end_behavior": {"missing_payment_method": "cancel"}
+                },
+                "trial_period_days": 30,
+            },
         )
         return redirect(session.url, code=303)
 
     def handle_successful_subscription(session):
         customer_id = session["customer"]
-        # Fetch the user associated with this Stripe customer ID and update their subscription status
-        user = User.query.filter_by(stripe_customer_id=customer_id).first()
-        if user:
-            user.is_subscribed = True
-            db.session.commit()
+        print("Customer ID:", customer_id)
+        if customer_id:
+            # Fetch the user associated with this Stripe customer ID and update their subscription status
+            user = User.query.filter_by(stripe_customer_id=customer_id).first()
+            if user:
+                user.is_subscribed = 1
+                db.session.commit()
+                print(f"User {user.id} subscription status updated to 1.")
+            else:
+                print(f"No user found with customer ID: {customer_id}")
+        else:
+            print("No customer ID found in the session.")
 
     @app.route("/webhook", methods=["POST"])
     def stripe_webhook():
+        print("Received webhook.")
         stripe.api_key = app.config["STRIPE_SECRET_KEY"]
         payload = request.get_data(as_text=True)
         sig_header = request.headers.get("Stripe-Signature")
         event = None
+        print(app.config["STRIPE_ENDPOINT_SECRET"])
 
         try:
             event = stripe.Webhook.construct_event(
-                payload, sig_header, "your_webhook_secret"
+                payload, sig_header, app.config["STRIPE_ENDPOINT_SECRET"]
             )
+            print("Event received:", event)
         except ValueError as e:
+            print("Error parsing the webhook payload:", str(e))
             return "", 400
         except stripe.error.SignatureVerificationError as e:
+            print("Error verifying the webhook signature:", str(e))
             return "", 400
 
         if event["type"] == "checkout.session.completed":
+            print("Checkout session completed event received.")
             session = event["data"]["object"]
             # Update the user’s subscription status in your database
             handle_successful_subscription(session)  # Implement this function
+            print("Subscription handling completed.")
 
         return "", 200
 
     @app.route("/subscription-success")
     def subscription_success():
+        print("Subscription success.")
         return render_template("subscription_success.html")
 
     @app.route("/subscription-cancel")
     def subscription_cancel():
+        print("Subscription cancelled.")
         return render_template("subscription_cancel.html")
