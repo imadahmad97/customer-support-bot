@@ -145,8 +145,8 @@ def init_routes(app):
                 subject = "Please confirm your email"
                 send_email(new_user.email, subject, html)
 
-                flash("Registration successful! Please log in.")
-                return redirect(url_for("post_registration"))
+                flash("Registration successful! Please proceed to the payment.")
+                return redirect(url_for("create_checkout_session", email=email))
 
             elif action == "Login":
                 username = request.form["username"]
@@ -341,11 +341,33 @@ def init_routes(app):
         logout_user()
         return redirect(url_for("login_register"))
 
-    @app.route("/create-checkout-session", methods=["POST"])
+    @app.route("/create-checkout-session", methods=["GET", "POST"])
     def create_checkout_session():
         print("Creating checkout session.")
+        email = request.args.get("email")
+        print("Email:", email)
         stripe.api_key = app.config["STRIPE_SECRET_KEY"]
-        session = stripe.checkout.Session.create(
+        # Find the user in the database
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            print("User not found.")
+            flash("User not found")
+            return redirect(url_for("login_register"))
+
+        # Create a customer in Stripe if not already created
+        if user.stripe_customer_id:
+            customer_id = user.stripe_customer_id
+            print("Existing customer ID:", customer_id)
+        else:
+            customer = stripe.Customer.create(email=email)
+            customer_id = customer.id
+            print("New customer ID:", customer_id)
+
+            # Update the user's stripe_customer_id
+            user.stripe_customer_id = customer.id
+            db.session.commit()
+
+        stripe_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=[
                 {
@@ -354,6 +376,7 @@ def init_routes(app):
                 },
             ],
             mode="subscription",
+            customer=user.stripe_customer_id,
             success_url=url_for("subscription_success", _external=True),
             cancel_url=url_for("subscription_cancel", _external=True),
             subscription_data={
@@ -363,11 +386,21 @@ def init_routes(app):
                 "trial_period_days": 30,
             },
         )
-        return redirect(session.url, code=303)
+        return redirect(stripe_session.url, code=303)
 
-    def handle_successful_subscription(session):
-        customer_id = session["customer"]
+    def handle_successful_subscription(stripe_session):
+        customer_id = stripe_session["customer"]
         print("Customer ID:", customer_id)
+        print(f"Type of customer_id: {type(customer_id)}")
+
+        print("Session data:", stripe_session)
+
+        all_users = User.query.all()
+        for user in all_users:
+            print(
+                f"User ID: {user.id}, Stripe Customer ID: {user.stripe_customer_id}, Type: {type(user.stripe_customer_id)}"
+            )
+
         if customer_id:
             # Fetch the user associated with this Stripe customer ID and update their subscription status
             user = User.query.filter_by(stripe_customer_id=customer_id).first()
@@ -402,11 +435,12 @@ def init_routes(app):
             return "", 400
 
         if event["type"] == "checkout.session.completed":
-            print("Checkout session completed event received.")
-            session = event["data"]["object"]
+            stripe_session = event["data"]["object"]
             # Update the user’s subscription status in your database
-            handle_successful_subscription(session)  # Implement this function
+            handle_successful_subscription(stripe_session)  # Implement this function
             print("Subscription handling completed.")
+        else:
+            print(event["type"])
 
         return "", 200
 
