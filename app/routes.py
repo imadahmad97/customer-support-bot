@@ -64,7 +64,14 @@ def init_routes(app):
                 db.session.commit()
 
             login_user(user)
+
+            # Check if the user is subscribed
+            if not user.is_subscribed:
+                # Redirect to the subscription page if not subscribed
+                return redirect(url_for("create_checkout_session", email=user.email))
+
             return redirect(url_for("bots"))
+
         return "Failed to fetch user info", 500
 
     @app.route("/confirm_email")
